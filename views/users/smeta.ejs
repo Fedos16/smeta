@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= data.typePanel %></title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Neucha&amp;subset=cyrillic" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="page_content">
+            <div class="p_header">
+                <div class="h_logo">
+                    <div class="logo_style">
+                        <img src="/images/logo.png" alt="" width="50" height="62">
+                        <div class="logo_text">
+                            <span style="font-size: 30px">Студия</span>
+                            <p style="font-size: 30px">Ремонтов</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="h_content">
+                    <p>Сметная документация от 10.12.2018 по Объекту №155</p>
+                </div>
+                <div class="h_user">
+                    <p><%= data.user %></p>
+                    <img src="/images/exit.png" alt="">
+                </div>
+            </div>
+
+<div class="p_body">
+    <div class="body_navigation" id="back_navigation">
+        <div class="navigation_left">
+            <a href="/user/newdocument"><div class="back_documents"></div></a>
+            <img src="/images/back.png" alt="">
+        </div>
+    </div>
+</div>
+<div class="body_lr">
+    <div class="body_m">
+        <table id="table_smeta">
+            <thead>
+                <tr>
+                    <th colspan="5" style="text-align: center; height: 50px;">Сметная документация</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<% include .././layout/footer.ejs %>

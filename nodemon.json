@@ -1,0 +1,10 @@
+{
+    "ignore": ["node_modules", "dev", "public"],
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": 3000,
+      "MONGO_URL": "mongodb://admin:Admin21122018@ds137540.mlab.com:37540/crm-database"
+    },
+    "ext": ".js,.json",
+    "watch": "./"
+  }

@@ -1,0 +1,133 @@
+<% include .././layout/header.ejs %>
+
+<div class="p_body">
+    <div class="body_navigation">
+        <ul>
+            <li>Создать новую смету</li>
+            <li></li>
+            <li id="body_nav_active">Мои сметы</li>
+        </ul>
+    </div>
+    <div class="body_lr">
+        <div class="body_l">
+            <div class="room_add">
+                <p>+</p>
+            </div>
+        </div>
+        <div class="body_r">
+            <div class="body_r_type_jobs" style="display: none;">
+                <div class="type_jobs_col">
+                    <div class="type_jobs_item" id="dismantling">
+                        <div class="type_jobs">
+                            <div class="tj_text">Демонтажные работы</div>
+                            <div class="tj_icon">▼</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                        </ul>
+                    </div>
+                    <div class="type_jobs_item" id="o">
+                        <div class="type_jobs">
+                            <div class="tj_text">Черновые работы</div>
+                            <div class="tj_icon">▼</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+                <div class="type_jobs_col">
+                    <div class="type_jobs_item" id="t">
+                        <div class="type_jobs">
+                            <div class="tj_text">Чистовые работы</div>
+                            <div class="tj_icon">▼</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                        </ul>
+                    </div>
+                    <div class="type_jobs_item" id="th">
+                        <div class="type_jobs">
+                            <div class="tj_text">Другие работы</div>
+                            <div class="tj_icon">▼</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="new_room" style="display: none;">
+    <div class="room_room" style="opacity: 0;">
+        <div class="room_title">
+            <div class="title_left">Создание новой комнаты</div>
+            <div class="title_right" id="close_new_room">×</div>
+        </div>
+        <div class="room_body">
+            <div class="room_row other_row">
+                <div class="room_col other_col">
+                    <select class="room_input" id="name_room">
+                        <option value="none">Название комнаты</option>
+                        <option value="Комната">Комната</option>
+                        <option value="Кухня">Кухня</option>
+                        <option value="Кладовая">Кладовая</option>
+                        <option value="Ванна">Ванна</option>
+                        <option value="Туалет">Туалет</option>
+                        <option value="Коридор">Коридор</option>
+                        <option value="Лоджия-Балкон">Лоджия-Балкон</option>
+                    </select>
+                    <input type="text" class="room_input" id="name_room_i" placeholder="Название комнаты" style="display: none;">
+                    <p title="Позволяет задать свое название комнаты">Свое название</p>
+                </div>
+                <div class="room_col">
+                    <select class="room_input" id="type_room">
+                        <option value="none">Тип комнаты</option>
+                        <option value="1">Комната</option>
+                        <option value="2">Кухня</option>
+                        <option value="3">Ванная комната</option>
+                        <option value="4">Лоджия-Балкон</option>
+                    </select>
+                </div>
+            </div>
+            <div class="room_row">
+                <div class="room_col">
+                    <input type="text" class="room_input" placeholder="Длина, м/п" id="lenght_r">
+                    <input type="text" class="room_input" placeholder="Ширина, м/п" id="width_r">
+                </div>
+                <div class="room_col">
+                    <input type="text" class="room_input" placeholder="Высота, м/п" id="height_r">
+                    <input type="text" class="room_input" placeholder="Проем, м2" id="opening_r">
+                </div>
+            </div>
+            <div class="room_row">
+                <input type="text" class="room_input" id="perimeter" placeholder="Периметр" readonly title="Рассчитывается автоматически">
+                <input type="text" class="room_input" id="floor_area" placeholder="Площадь пола" readonly title="Рассчитывается автоматически">
+                <input type="text" class="room_input" id="wall_area" placeholder="Площадь стен" readonly title="Рассчитывается автоматически">
+            </div>
+            <div class="room_splin"></div>
+            <div class="room_row">
+                <button class="room_modal" id="create_room">Создать комнату</button>
+            </div>
+            <div class="status_body" style="opacity: 0;">Статус создания комнаты</div>
+        </div>
+    </div>
+</div>
+
+<% include .././layout/footer.ejs %>

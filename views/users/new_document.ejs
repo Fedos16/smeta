@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= data.typePanel %></title>
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Neucha&amp;subset=cyrillic" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="page_content">
+            <div class="p_header">
+                <div class="h_logo">
+                    <div class="logo_style">
+                        <img src="/images/logo.png" alt="" width="50" height="62">
+                        <div class="logo_text">
+                            <span style="font-size: 30px">Студия</span>
+                            <p style="font-size: 30px">Ремонтов</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="h_content">
+                    <p class="NameRoom">Рабочая область модуля «Смета»</p>
+                    <div class="h_content_body" style="display: none;">
+                        <div class="h_c_body_item"><p>Периметр: </p><span id="perimetr_room">52</span></div>
+                        <div class="h_c_body_item"><p>Площадь пола: </p><span id="floor_area_room">52</span></div>
+                        <div class="h_c_body_item"><p>Площадь стен: </p><span id="wall_area_room">52</span></div>
+                    </div>
+                </div>
+                <div class="h_user">
+                    <p><%= data.user %></p>
+                    <img src="/images/exit.png" alt="">
+                </div>
+            </div>
+
+<div class="p_body">
+    <div class="body_navigation" id="back_navigation">
+        <div class="navigation_left">
+            <a href="/user/alldocuments"><div class="back_documents"></div></a>
+            <img src="/images/back.png" alt="">
+        </div>
+        <div class="navigation_right">
+            <h1>Информация об объекте</h1>
+        </div>
+    </div>
+
+    <div class="info_document">
+        <div class="room_row">
+            <div class="room_col">
+                <input class="room_input" placeholder="Введите ID объекта" id="idObject">
+            </div>
+            <div class="room_col">
+                <input class="room_input" placeholder="Введите Дату создания сметы" id="dateCreateSmeta" value="10.12.2018" readonly>
+            </div>
+        </div>
+        <div class="room_row">
+            <div class="room_col">
+                <input class="room_input" placeholder="Введите адрес объекта" id="adressObject">
+            </div>
+        </div>
+        <div class="room_row">
+            <div class="room_col">
+                <input class="room_input" placeholder="Введите Имя клиента" id="nameClient">
+            </div>
+            <div class="room_col">
+                <input class="room_input" placeholder="Введите Номер телефона клиента" id="phoneClient">
+            </div>
+        </div>
+        <div class="room_row">
+            <button class="room_modal" id="createDocument">Продолжить</button>
+        </div>
+        <div class="status_body" style="opacity: 0;">Статус создания комнаты</div>
+    </div>
+
+    <div class="body_lr" style="display: none;">
+        <div class="body_l">
+            <h2>Комнаты</h2>
+            <div class="room_add">
+                <p>+</p>
+            </div>
+        </div>
+        <div class="body_m">
+            <h2>Рабочая область</h2>
+            <div class="body_r_type_jobs" style="display: none;">
+                <div class="type_jobs_col">
+                    <div class="type_jobs_item" id="dismantling">
+                        <div class="type_jobs">
+                            <div class="tj_text" title="Демонтажные работы">Демонтажные работы</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>
+                                <div class="li_left">Полы</div>
+                                <div class="li_right">100 000 ₽</div>
+                            </li>
+                            <li>
+                                <div class="li_left">Стены</div>
+                                <div class="li_right">100 000 ₽</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="type_jobs_item" id="o">
+                        <div class="type_jobs">
+                            <div class="tj_text">Черновые работы</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                        </ul>
+                    </div>
+                    
+                </div>
+                <div class="type_jobs_col">
+                    <div class="type_jobs_item" id="t">
+                        <div class="type_jobs">
+                            <div class="tj_text">Чистовые работы</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                        </ul>
+                    </div>
+                    <div class="type_jobs_item" id="th">
+                        <div class="type_jobs">
+                            <div class="tj_text">Другие работы</div>
+                        </div>
+                        <ul class="category" style="display: none;">
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                            <li>Название <span>- 1000 руб.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="body_r_content" style="display: none;">
+                <div class="title_rcb">
+                    <h3>Демонтажные работы → Полы</h3>
+                </div>
+                <div class="body_content_jobs">
+                    <table class="table_data">
+                        <thead>
+                            <th>Наименование <span>Показать выбранные</span></th>
+                            <th></th>
+                            <th>Ед. изм</th>
+                            <th>Количество</th>
+                            <th></th>
+                            <th>Цена</th>
+                            <th>Сумма</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Заправка кондиционера фреоном ( без учёта фреона ) работы выполняются при температуре воздуха +5 градусов</td>
+                                <td>м/п</td>
+                                <td>=формула</td>
+                                <td>65</td>
+                                <td>=формула</td>
+                            </tr>
+                            <tr>
+                                <td>Демонтаж подложки из ДВП обмазанной битумной мастикой*</td>
+                                <td>м/п</td>
+                                <td>=формула</td>
+                                <td>65</td>
+                                <td>=формула</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="body_r">
+            <h2>Сводная информация</h2>
+            <div class="body_rm" style="display: none;">
+                <div class="rout_smeta">
+                    <button class="orange_button" id="CreateSmeta">Создать смету</button>
+                </div>
+                <ul class="ul_room">
+                    <li>Комната
+                        <ul class="ul_category">
+                            <li>
+                                <div class="li_left">Категория работ</div>
+                                <div class="li_right">9200 R</div>
+                            </li>
+                            <li>
+                                <div class="li_left">Категория работ</div>
+                                <div class="li_right">1230 R</div>
+                            </li>
+                            <li>
+                                <div class="li_left">Категория работ</div>
+                                <div class="li_right">8120 R</div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Комната
+                        <ul class="ul_category">
+                            <li>
+                                <div class="li_left">Категория работ</div>
+                                <div class="li_right">9200 R</div>
+                            </li>
+                            <li>
+                                <div class="li_left">Категория работ</div>
+                                <div class="li_right">1230 R</div>
+                            </li>
+                            <li>
+                                <div class="li_left">Категория работ</div>
+                                <div class="li_right">8120 R</div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="total_amount">
+                    ИТОГО: <span>32120 R</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="new_room" style="display: none;">
+    <div class="room_room" style="opacity: 0;">
+        <div class="room_title">
+            <div class="title_left">Создание новой комнаты</div>
+            <div class="title_right" id="close_new_room">×</div>
+        </div>
+        <div class="room_body">
+            <div class="room_row other_row">
+                <div class="room_col other_col">
+                    <select class="room_input" id="name_room">
+                        <option value="none">Название комнаты</option>
+                        <% for (var i=0; i < data.room.length; i++){ %>
+                            <option value=<%=data.room[i].Number %>><%= data.room[i].Name %></option>
+                        <% } %>
+                    </select>
+                    <input type="text" class="room_input" id="name_room_i" placeholder="Название комнаты" style="display: none;">
+                    <p title="Позволяет задать свое название комнаты">Свое название</p>
+                </div>
+                <div class="room_col">
+                    <select class="room_input" id="type_room" disabled>
+                        <option value="none">Тип комнаты</option>
+                        <% for (var i=0; i < data.room.length; i++){ %>
+                            <option value=<%=data.room[i].Number %>><%= data.room[i].Name %></option>
+                        <% } %>
+                    </select>
+                </div>
+            </div>
+            <div class="room_row">
+                <div class="room_col">
+                    <input type="text" class="room_input" placeholder="Длина, м/п" id="lenght_r">
+                    <input type="text" class="room_input" placeholder="Ширина, м/п" id="width_r">
+                </div>
+                <div class="room_col">
+                    <input type="text" class="room_input" placeholder="Высота, м/п" id="height_r">
+                    <input type="text" class="room_input" placeholder="Проем, м2" id="opening_r">
+                </div>
+            </div>
+            <div class="room_row">
+                <input type="text" class="room_input" id="perimeter" placeholder="Периметр" readonly title="Рассчитывается автоматически">
+                <input type="text" class="room_input" id="floor_area" placeholder="Площадь пола" readonly title="Рассчитывается автоматически">
+                <input type="text" class="room_input" id="wall_area" placeholder="Площадь стен" readonly title="Рассчитывается автоматически">
+            </div>
+            <div class="room_splin"></div>
+            <div class="room_row">
+                <button class="room_modal" id="create_room">Создать комнату</button>
+            </div>
+            <div class="status_body" style="opacity: 0;">Статус создания комнаты</div>
+        </div>
+    </div>
+</div>
+
+<% include .././layout/footer.ejs %>
