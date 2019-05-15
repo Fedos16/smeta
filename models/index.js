@@ -1,8 +1,8 @@
 const User = require('./users');
 const People = require('./people');
 const Rooms = require('./rooms');
-const Categories = require('./categories');
-const Subcategories = require('./subcategories');
+const Categories = require('./typeJobs');
+const Subcategories = require('./objectJobs');
 const JobItems = require('./jobitems');
 const Documents = require('./documents');
 

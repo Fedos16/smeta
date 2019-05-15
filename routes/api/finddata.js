@@ -44,5 +44,15 @@ router.post('/findjobs', (req, res) => {
         res.json({ok: false});
     });
 });
+router.post('/findItemsJobs', (req, res) => {
+    models.JobItems.find()
+    .then(data => {
+        res.json({ok: true, data});
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({ok: false, text: 'Сервер временно недоступен', err})
+    });
+});
 
 module.exports = router;

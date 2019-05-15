@@ -36,7 +36,7 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage });
 
-// SAVE IMAGE
+// SAVE EXCEL
 router.post('/saveexcel', upload.single("file"), async (req, res) => {
 
     var filename = path.join(__dirname, req.file.path)
@@ -51,207 +51,46 @@ router.post('/savedatafromexcel', async (req, res) => {
     var data = await workbook.xlsx.readFile(filename);
 
     var arr = [];
-    var rooms = [];
-    var categories = {};
-    var subcategories = {};
-    var jobsDB = [];
 
     var worksheet = workbook.getWorksheet(data.worksheets[0].name); 
-    worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) { 
-        arr.push(row.values);
-        if (row.values[8] != null){
-            rooms.push({
-                Name: row.values[9].charAt(0).toUpperCase() + row.values[9].substring(1),
-                Number: row.values[8],
+    worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
+        
+        try{
+            var job_j = row.values[1].richText[0].text;
+        } catch(e){
+            var job_j = row.values[1];
+        }
+        try{
+            var unit_j = row.values[2].richText[0].text;
+        } catch(e){
+            var unit_j = row.values[2];
+        }
+        // Цена
+        try{
+            var price = row.values[6].result;
+        } catch(e){
+            var price = row.values[6];
+        }
+
+        if (job_j != null && unit_j != null && price != null && price != "цена") {
+            arr.push({
+                Name: job_j,
+                Price: price,
+                UnitMe: unit_j,
                 Status: true
             });
-        } else if (row.values[3] != null && row.values[4] != null){
-            // Категория
-            try{
-                var value = row.values[3].richText[0].text;
-            } catch(e) {
-                var value = row.values[3];
-            }
-            // Комната
-            try{
-                var room_v = String(row.values[5].richText[0].text).split(',').join('.').split('.');
-            } catch(e){
-                var room_v = String(row.values[5]).split(',').join('.').split('.');
-            }
-            // Количество для Категорий
-            try{
-                var colvo = categories[value].col+1;
-            } catch(e) {
-                var colvo = 1;
-            }
-            // Команты для Категорий
-            try{
-                var arrRoom = categories[value].room;
-                for (var x=0; x < room_v.length; x++){
-                    if (arrRoom.indexOf(room_v[x]) == -1 && String(room_v[x]).length <= 2){
-                        arrRoom.push(room_v[x]);
-                    }
-                }
-            } catch(e) {
-                var arrRoom = room_v;
-            }
-
-            //Подкатегория
-            try{
-                var subcategory = row.values[4].richText[0].text;
-            } catch(e){
-                var subcategory = row.values[4];
-            }
-            //Категория
-            try{
-                var category = row.values[3].richText[0].text;
-            } catch(e){
-                var category = row.values[3];
-            }
-            // Количество для Подкатегорий
-            try{
-                var colSubcat = subcategories[subcategory].col+1;
-            } catch(e) {
-                var colSubcat = 1;
-            }
-            // Команты для Подкатегорий
-            try{
-                if (Object.keys(subcategories).indexOf(subcategory) != -1){
-                    var arrRoomSub = subcategories[subcategory].room;
-                    for (var x=0; x < room_v.length; x++){
-                        if (arrRoomSub.indexOf(room_v[x]) == -1 && String(room_v[x]).length <= 2){
-                            arrRoomSub.push(room_v[x]);
-                        }
-                    }
-                }
-            } catch(e) {
-                var arrRoomSub = room_v;
-            }
-            //console.log(subcategory + " = " + arrRoomSub.join(', '));
-            // Категории для Подкатегорий
-            try{
-                var arrCat = subcategories[subcategory].category;
-                if (arrCat.indexOf(category) == -1){
-                    arrCat.push(category);
-                }
-            } catch(e) {
-                var arrCat = [category];
-            }
-
-            categories[value] = {
-                col: colvo,
-                room: arrRoom
-            }
-            subcategories[subcategory] = {
-                col: colSubcat,
-                room: arrRoomSub,
-                category: arrCat
-            }
-
-            if (row.values[6] != null || row.values[6] != "цена"){
-                // Название работ
-                try{
-                    var job_j = row.values[1].richText[0].text;
-                } catch(e){
-                    var job_j = row.values[1];
-                }
-                // Категория
-                try{
-                    var value_j = row.values[3].richText[0].text;
-                } catch(e) {
-                    var value_j = row.values[3];
-                }
-                // Комната
-                try{
-                    var room_v_j = String(row.values[5].richText[0].text).split(',');
-                } catch(e){
-                    var room_v_j = String(row.values[5]).split(',');
-                }
-                //Подкатегория
-                try{
-                    var subcategory_j = row.values[4].richText[0].text;
-                } catch(e){
-                    var subcategory_j = row.values[4];
-                }
-                // Единица измерения
-                try{
-                    var unit_j = row.values[2].richText[0].text;
-                } catch(e){
-                    var unit_j = row.values[2];
-                }
-                // Цена
-                try{
-                    var price = row.values[6].result;
-                } catch(e){
-                    var price = row.values[6];
-                }
-
-                if (job_j != value_j) {
-
-                    jobsDB.push({
-                        Name: job_j, 
-                        Categories: value_j,
-                        SubCategories: subcategory_j,
-                        RoomNumber: room_v,
-                        Price: price,
-                        UnitMe: unit_j
-                    });
-
-                }
-            }
         }
     });
-
-    var categoriesDB = [];
-    var subcategoriesDB = [];
-
-    Object.keys(categories).map(cat => {
-        if (categories[cat].col == 1 || cat.length > 30){
-            delete categories[cat];
-        } else {
-            categoriesDB.push({
-                Name: cat,
-                RoomNumber: categories[cat].room
-            });
-        }
-    })
-    Object.keys(subcategories).map(sub => {
-        if (subcategories[sub].col == 1 || sub.length > 45){
-            delete subcategories[sub];
-        } else {
-            subcategoriesDB.push({
-                Name: sub,
-                Categories: subcategories[sub].category,
-                RoomNumber: subcategories[sub].room
-            });
-        }
-    })
-
-    await models.Rooms.remove();
-    models.Rooms.insertMany(rooms)
-    .catch(err => {
-        res.json({ok: false, text: 'Ошибка записи Комнат'});
-    });
-
-    await models.Categories.remove();
-    models.Categories.insertMany(categoriesDB)
-    .catch(err => {
-        res.json({ok: false, text: 'Ошибка записи Категорий'});
-    })
-
-    await models.Subcategories.remove();
-    models.Subcategories.insertMany(subcategoriesDB)
-    .catch(err => {
-        res.json({ok: false, text: 'Ошибка записи Подкатегорий'});
-    })
 
     await models.JobItems.remove();
-    models.JobItems.insertMany(jobsDB)
+    models.JobItems.insertMany(arr)
     .catch(err => {
         res.json({ok: false, text: 'Ошибка записи Наименований работ'});
     });
 
-    res.json({ok: true, text: "Данные загружены!", data: jobsDB});
+    console.log(arr);
+
+    res.json({ok: true, text: "Данные загружены!", data: arr});
 
 })
 router.post('/newpeople', async (req, res) => {

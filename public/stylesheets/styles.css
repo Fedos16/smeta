@@ -23,15 +23,13 @@ input[type="file"]{
     display: none;
 }
 .upload_excel_file{
-    width: 300px;
-    height: 70px;
+    width: 200px;
+    height: 40px;
     background-color: #fc0;
     color: #242424;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 16px;
     border: none;
     cursor: pointer;
-    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -231,7 +229,6 @@ input.error, select.error{
 }
 .body_r{
     width: 100%;
-    max-width: 350px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -273,14 +270,15 @@ input.error, select.error{
     filter: invert(1);
 }
 .body_title{
-    width: 100%;
+    width: 95%;
+    margin: 30px auto; 
     height: 120px;
     padding: 10px 40px;
     padding-bottom: 0px;
     padding-left: 10%;
     box-sizing: border-box;
     border: 1px solid #e6e6e6;
-    box-shadow: 0px 0px 10px #e6e6e6;
+    box-shadow: 0px 0px 6px #7a7a7a;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -300,7 +298,7 @@ input.error, select.error{
 .title_menu ul li{
     padding: 8px 20px;
     padding-top: 0px;
-    border-bottom: 1px solid transparent;
+    border-bottom: 2px solid transparent;
     margin-bottom: -1px;
     color: #383838b9;
 }
@@ -309,7 +307,7 @@ input.error, select.error{
     cursor: pointer;
 }
 #active_menu_item{
-    border-bottom: 1px solid rgb(255, 136, 0);
+    border-bottom: 2px solid rgb(255, 136, 0);
     color: #000000;
 }
 
@@ -331,8 +329,8 @@ table tbody tr:not(.active_tr):hover{
     background-color: rgba(211, 211, 211, 0.277);
 }
 table tbody td{
-    height: 52px;
-    padding: 10px;
+    height: 32px;
+    padding: 5px 10px;
     text-align: left;
 }
 table tbody td img{
@@ -341,7 +339,30 @@ table tbody td img{
 }
 
 .body_content{
-    width: 100%;
+    width: 95%;
+    margin: 0px auto;
+    display: flex;
+    flex-direction: column;
+}
+.body_content_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.create_new {
+    margin: 0px auto;
+    background-color: transparent;
+    border: 2px solid #28c430;
+    width: 200px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.create_new:hover{
+    background-color: #28c430;
+    color: white;
 }
 .body_row{
     width: 100%;
@@ -452,6 +473,17 @@ table tbody td img{
     justify-content: center;
     align-items: center;
 }
+.background_modal {
+    width: 100%;
+    height: 100%;
+    background-color: #00000080;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .room_room{
     width: 95%;
     max-width: 800px;
@@ -461,7 +493,24 @@ table tbody td img{
     padding: 40px 40px;
     box-shadow: 0px 0px 12px rgb(82, 82, 82);
 }
+.modal_window {
+    width: 95%;
+    max-width: 800px;
+    height: auto;
+    max-height: 550px;
+    background-color: white;
+    padding: 40px 40px;
+    box-shadow: 0px 0px 12px rgb(82, 82, 82);
+}
 .room_title{
+    width: 100%;
+    height: 60px;
+    font-size: 20px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: flex-start;
+}
+.modal_title {
     width: 100%;
     height: 60px;
     font-size: 20px;
@@ -633,7 +682,7 @@ table tbody td img{
 }
 .body_column{
     width: 100%;
-    min-height: 100px;
+    min-height: 70px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -700,8 +749,35 @@ td img{
 .table_data thead tr th:nth-child(4){
     width: 100px;
 }
+.table_data thead tr th {
+    text-align: center;
+}
 .table_data tbody tr td:nth-child(2), .table_data tbody tr td:nth-child(5){
     width: 45px;
+}
+.table_60 {
+    width: 60%;
+}
+.table_80 {
+    width: 80%;
+}
+.table_60 tbody td, .table_80 tbody td {
+    text-align: center;
+}
+.table_60 tbody td:nth-child(3), .table_80 tbody td:nth-child(3) {
+    text-align: left;
+}
+.table_my th{
+    text-align: center;
+}
+th:nth-child(1){
+    width: 50px !important;
+}
+th.size_20{
+    width: 20% !important;
+}
+th.size_10{
+    width: 10% !important;
 }
 
 th span{
@@ -857,4 +933,40 @@ table#table_smeta tbody td:nth-child(5){
 
 table#table_smeta tbody tr{
     border: none;
+}
+
+div.trueSymbol, div.falseSymbol {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div.trueSymbol::before{
+    content: "";
+    display: block;
+    border-left: 3px solid #28c430;
+    border-bottom: 3px solid #28c430;
+    background: transparent;
+    width: 10px;
+    height: 4px;
+    transform: rotate(-50deg);
+    
+    /* Only for positioning */
+    position: relative;
+    top: -1px;
+    left: 1px;
+}
+div.falseSymbol::before, div.falseSymbol::after {
+    position: absolute;
+    content: " ";
+    height: 15px;
+    width: 3px;
+    background-color: red;
+}
+div.falseSymbol::before {
+    transform: rotate(45deg);
+}
+div.falseSymbol::after {
+    transform: rotate(-45deg);
 }

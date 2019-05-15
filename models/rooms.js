@@ -6,9 +6,6 @@ const schema = new Schema(
     Name: {
         type: String
     },
-    Number: {
-        type: String
-    },
     Status: {
         type: Boolean
     }

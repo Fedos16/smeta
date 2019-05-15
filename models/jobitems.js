@@ -6,20 +6,15 @@ const schema = new Schema(
     Name: {
         type: String
     },
-    Categories: {
-        type: Array
-    },
-    SubCategories: {
-        type: Array
-    },
-    RoomNumber: {
-        type: Array
-    },
     Price: {
         type: String
     },
     UnitMe: {
         type: String
+    },
+    Status: {
+      type: Boolean,
+      default: true
     }
   },
   {

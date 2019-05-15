@@ -6,8 +6,9 @@ const schema = new Schema(
     Name: {
         type: String
     },
-    RoomNumber: {
-        type: Array
+    Status: {
+      type: Boolean,
+      default: true
     }
   },
   {
@@ -19,4 +20,4 @@ schema.set('toJSON', {
   virtuals: true
 });
 
-module.exports = mongoose.model('Categories', schema);      
+module.exports = mongoose.model('ObjectJobs', schema);      
