@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+    var resetValueInputAndSelect = () => {
+        $('input').val('');
+        $('select').prop('selectedIndex', 0)
+    }
     var pageUsers = () => {
         var item = $('#active_menu_item').text();
         var lines = '';
@@ -122,8 +126,8 @@ $(document).ready(function(){
                             <td>${datas[i].UnitMe}</td>
                             <td>${datas[i].Price}</td>
                             <td><div class="${symbol}"></div></td>
-                            <td><img src="/images/pencil.png"></td>
-                            <td><img src="/images/remove.png"></td>
+                            <td class="editLine"><img src="/images/pencil.png"></td>
+                            <td class="removeLine"><img src="/images/remove.png"></td>
                         </tr>
                     `);
                     $('.body_content').show();
@@ -134,6 +138,118 @@ $(document).ready(function(){
                 alert(data.text);
             }
         });
+    }
+    var getAllRooms = () => {
+        $.ajax({
+            type: 'POST',
+            url: '/api/finddata/findAllRooms'
+        }).done(data => {
+            if(data.ok){
+                let datas = data.data;
+                $('.table_data tbody').html('');
+                for (let i=0; i < datas.length; i++) {
+                    if (datas[i].Status) {
+                        var symbol = 'trueSymbol';
+                    } else {
+                        var symbol = 'falseSymbol';
+                    }
+                    $('.table_data tbody').append(`
+                        <tr>
+                            <td hidden>${datas[i].id}</td>
+                            <td>${Number(i)+1}</td>
+                            <td>${datas[i].Name}</td>
+                            <td><div class="${symbol}"></div></td>
+                            <td class="editLine"><img src="/images/pencil.png"></td>
+                            <td class="removeLine"><img src="/images/remove.png"></td>
+                        </tr>
+                    `);
+                    $('.body_content').show();
+                }
+            } else {
+                $('.body_content').show();
+                console.log(data.err);
+                alert(data.text);
+            }
+        });
+    }
+    var getAllTypeJobs = () => {
+        $.ajax({
+            type: 'POST',
+            url: '/api/finddata/findAllTypeJobs'
+        }).done(data => {
+            if(data.ok){
+                let datas = data.data;
+                $('.table_data tbody').html('');
+                for (let i=0; i < datas.length; i++) {
+                    if (datas[i].Status) {
+                        var symbol = 'trueSymbol';
+                    } else {
+                        var symbol = 'falseSymbol';
+                    }
+                    $('.table_data tbody').append(`
+                        <tr>
+                            <td hidden>${datas[i].id}</td>
+                            <td>${Number(i)+1}</td>
+                            <td>${datas[i].Name}</td>
+                            <td><div class="${symbol}"></div></td>
+                            <td class="editLine"><img src="/images/pencil.png"></td>
+                            <td class="removeLine"><img src="/images/remove.png"></td>
+                        </tr>
+                    `);
+                    $('.body_content').show();
+                }
+            } else {
+                $('.body_content').show();
+                console.log(data.err);
+                alert(data.text);
+            }
+        });
+    }
+    var getAllObjectsJob = () => {
+        $.ajax({
+            type: 'POST',
+            url: '/api/finddata/findAllObjectsJob'
+        }).done(data => {
+            if(data.ok){
+                let datas = data.data;
+                $('.table_data tbody').html('');
+                for (let i=0; i < datas.length; i++) {
+                    if (datas[i].Status) {
+                        var symbol = 'trueSymbol';
+                    } else {
+                        var symbol = 'falseSymbol';
+                    }
+                    $('.table_data tbody').append(`
+                        <tr>
+                            <td hidden>${datas[i].id}</td>
+                            <td>${Number(i)+1}</td>
+                            <td>${datas[i].Name}</td>
+                            <td><div class="${symbol}"></div></td>
+                            <td class="editLine"><img src="/images/pencil.png"></td>
+                            <td class="removeLine"><img src="/images/remove.png"></td>
+                        </tr>
+                    `);
+                    $('.body_content').show();
+                }
+            } else {
+                $('.body_content').show();
+                console.log(data.err);
+                alert(data.text);
+            }
+        });
+    }
+    var SelectQueryActiveItemMenu = () => {
+        let text = $('#active_menu_item').text();
+
+        if (text == 'Комнаты') {
+            getAllRooms();
+        } else if (text == 'Тип работ') {
+            getAllTypeJobs();
+        } else if (text == 'Объект работ') {
+            getAllObjectsJob();
+        } else if (text == 'Наименование работ') {
+            getItemsJobs();
+        }
     }
     var pagePrices = () => {
         var item = $('#active_menu_item').text();
@@ -174,7 +290,6 @@ $(document).ready(function(){
                 
                 <button id="create_new_Room" class="create_new">Новая комната</button>
             `);
-            // Запрос из бд
         } else if (item == 'Тип работ') {
             $('.body_content').addClass('body_content_row');
             $('.body_content').html(`
@@ -193,7 +308,6 @@ $(document).ready(function(){
                 
                 <button id="create_new_Type" class="create_new">Новый тип работ</button>
             `);
-            // Запрос из бд
         } else if (item == 'Объект работ') {
             $('.body_content').addClass('body_content_row');
             $('.body_content').html(`
@@ -212,7 +326,6 @@ $(document).ready(function(){
                 
                 <button id="create_new_Object" class="create_new">Новый объект работ</button>
             `);
-            // Запрос из бд
         } else if (item == 'Наименование работ') {
             $('.body_content').removeClass('body_content_row');
             $('.body_content').hide();
@@ -241,10 +354,10 @@ $(document).ready(function(){
                     <button id="create_new_Job" class="create_new">Создать</button>
                 </div>
             `);
-            getItemsJobs();
         } else {
             $('.body_content').html('<h1>Неизвестный раздел</h1>');
         }
+        SelectQueryActiveItemMenu();
     }
 
     // Функция обновления суммы подкатегории
@@ -1077,114 +1190,120 @@ $(document).ready(function(){
 
     $(document).delegate(".table_data tbody tr", "click", (e) => {
 
-        var parents = $(e.target).parents();
+        var cls = $($(e.target).closest('table')[0]).attr('class');
 
-        if (e.target.tagName != "IMG" && e.target.tagName != "INPUT"){
+        if (cls.indexOf('table_60') == -1 && cls.indexOf('table_80') == -1) {
 
-            for (var x=0; x < parents.length; x++){
-                if (parents[x].tagName == "TR"){
-                    if (parents[x].className == "active_tr") {
-                        $(parents[x]).removeClass('active_tr');
-                        $(parents[x].children[1].children[0]).hide();
-                        $(parents[x].children[4].children[0]).hide();
-                        if ($('.table_data thead tr th span').text() == "Показать все"){
-                            $(parents[x]).hide();
+            var parents = $(e.target).parents();
+
+            if (e.target.tagName != "IMG" && e.target.tagName != "INPUT"){
+
+                for (var x=0; x < parents.length; x++){
+                    if (parents[x].tagName == "TR"){
+                        if (parents[x].className == "active_tr") {
+                            $(parents[x]).removeClass('active_tr');
+                            $(parents[x].children[1].children[0]).hide();
+                            $(parents[x].children[4].children[0]).hide();
+                            if ($('.table_data thead tr th span').text() == "Показать все"){
+                                $(parents[x]).hide();
+                            }
+
+                        } else {
+                            $(parents[x]).addClass('active_tr');
+                            $(parents[x].children[1].children[0]).show();
+                            $(parents[x].children[4].children[0]).show();
                         }
 
-                    } else {
-                        $(parents[x]).addClass('active_tr');
-                        $(parents[x].children[1].children[0]).show();
-                        $(parents[x].children[4].children[0]).show();
+                        break;
                     }
-
-                    break;
                 }
-            }
 
-            var room = $('#activeRoom p:eq(0)').text();
-            var category = $('.title_rcb h3').text().split(' → ')[0];
-            var subcategory = $('.title_rcb h3').text().split(' → ')[1];
+                var room = $('#activeRoom p:eq(0)').text();
+                var category = $('.title_rcb h3').text().split(' → ')[0];
+                var subcategory = $('.title_rcb h3').text().split(' → ')[1];
 
-            if (sessionStorage.getItem('SMETA')){
-                var smeta = JSON.parse(sessionStorage.getItem('SMETA'));
-                
-            } else {
-                var smeta = {}
-            }
+                if (sessionStorage.getItem('SMETA')){
+                    var smeta = JSON.parse(sessionStorage.getItem('SMETA'));
+                    
+                } else {
+                    var smeta = {}
+                }
 
-            var jobs = [];
+                var jobs = [];
 
-            var table = $('.table_data tbody tr.active_tr');
+                var table = $('.table_data tbody tr.active_tr');
 
-            var summ = 0;
-            for (var i=0; i < table.length; i++) {
+                var summ = 0;
+                for (var i=0; i < table.length; i++) {
+                    jobs.push({
+                        "Название": table[i].children[0].textContent,
+                        "Ед. изм.": table[i].children[2].textContent,
+                        "Количество": table[i].children[3].textContent,
+                        "Цена": table[i].children[5].textContent,
+                        "Сумма": table[i].children[6].textContent,
+                        "ID": table[i].children[7].textContent
+                    });
+                    summ += Number(table[i].children[6].textContent);
+                }
                 jobs.push({
-                    "Название": table[i].children[0].textContent,
-                    "Ед. изм.": table[i].children[2].textContent,
-                    "Количество": table[i].children[3].textContent,
-                    "Цена": table[i].children[5].textContent,
-                    "Сумма": table[i].children[6].textContent,
-                    "ID": table[i].children[7].textContent
+                    "Сумма": summ
                 });
-                summ += Number(table[i].children[6].textContent);
-            }
-            jobs.push({
-                "Сумма": summ
-            });
 
-            refreshSummSubCategory(category, subcategory, summ);
+                refreshSummSubCategory(category, subcategory, summ);
 
-            if (Object.keys(smeta).indexOf(room) != -1){
-                if (Object.keys(smeta[room]).indexOf(category) != -1){
-                    smeta[room][category][subcategory] = jobs;
+                if (Object.keys(smeta).indexOf(room) != -1){
+                    if (Object.keys(smeta[room]).indexOf(category) != -1){
+                        smeta[room][category][subcategory] = jobs;
+                    } else {
+                        var aSubcategory = {};
+                        var aCategory = smeta[room];
+                        aSubcategory[subcategory] = jobs;
+                        aCategory[category] = aSubcategory;
+                        smeta[room] = aCategory;
+                    }
                 } else {
                     var aSubcategory = {};
-                    var aCategory = smeta[room];
+                    var aCategory = {};
                     aSubcategory[subcategory] = jobs;
                     aCategory[category] = aSubcategory;
                     smeta[room] = aCategory;
                 }
-            } else {
-                var aSubcategory = {};
-                var aCategory = {};
-                aSubcategory[subcategory] = jobs;
-                aCategory[category] = aSubcategory;
-                smeta[room] = aCategory;
-            }
-            
-            sessionStorage.setItem('SMETA', JSON.stringify(smeta));
+                
+                sessionStorage.setItem('SMETA', JSON.stringify(smeta));
 
-            var rooms = JSON.parse(sessionStorage.getItem('ROOMS'));
+                var rooms = JSON.parse(sessionStorage.getItem('ROOMS'));
 
-            Object.keys(smeta).map(room => {
-                smeta[room].floorArea = rooms[room].floorArea;
-                smeta[room].numRoom = rooms[room].numRoom;
-                smeta[room].perimetr = rooms[room].perimetr;
-                smeta[room].typeRoom = rooms[room].typeRoom;
-                smeta[room].wallArea = rooms[room].wallArea;
-            });
+                Object.keys(smeta).map(room => {
+                    smeta[room].floorArea = rooms[room].floorArea;
+                    smeta[room].numRoom = rooms[room].numRoom;
+                    smeta[room].perimetr = rooms[room].perimetr;
+                    smeta[room].typeRoom = rooms[room].typeRoom;
+                    smeta[room].wallArea = rooms[room].wallArea;
+                });
 
-            var data = {
-                id: JSON.parse(sessionStorage.getItem('OBJECT')).idDB,
-                data: smeta
-            }
-
-            $.ajax({
-                type: 'POST',
-                data: JSON.stringify(data),
-                contentType: 'application/json',
-                url: '/api/updatedata/rooms'
-            }).done(function(data){
-                if(!data.ok){
-                    alert("ОШИБКА ЗАПИСИ!");
+                var data = {
+                    id: JSON.parse(sessionStorage.getItem('OBJECT')).idDB,
+                    data: smeta
                 }
-            });
+
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: '/api/updatedata/rooms'
+                }).done(function(data){
+                    if(!data.ok){
+                        alert("ОШИБКА ЗАПИСИ!");
+                    }
+                });
 
 
-            Сonsolidated();
+                Сonsolidated();
+            }
+
+            $('.body_rm').show();
+
         }
-
-        $('.body_rm').show();
         
     })
 
@@ -1195,67 +1314,77 @@ $(document).ready(function(){
 
     $(document).delegate('.table_data tbody tr td img', 'click', (e) => {
 
-        var parents = $(e.target).parents();
-        for (var i=0; i < parents.length; i++){
-            if (parents[i].tagName == "TR"){
-                var tr = parents[i];
-            }
-        }
+        let cls = $($(e.target).closest('td')[0]).attr('class');
 
-        var room = $('#activeRoom p:eq(0)').text();
-        var category = $('.title_rcb h3').text().split(' → ')[0];
-        var subcategory = $('.title_rcb h3').text().split(' → ')[1];
-        var id_job = $(tr.children[7]).text();
+        if (cls != 'editLine' && cls != 'removeLine') {
 
-        var smeta = JSON.parse(sessionStorage.getItem('SMETA'));
-        var arrJobs = smeta[room][category][subcategory];
-
-        if (e.target.className == "edit_name_jb"){
-            var name = $(tr.children[0]).text();
-            $(tr.children[0]).html(`<input type="text" class="table_input" value="${name}">`);
-            $(tr.children[1]).html(`<img src="/images/save_i.png" alt="" style="" class="ok_name_jb">`);
-        } else if(e.target.className == "edit_col_jb") {
-            var name = $(tr.children[3]).text();
-            $(tr.children[3]).html(`<input type="text" class="table_input" value="${name}" style="text-align: center;">`);
-            $(tr.children[4]).html(`<img src="/images/save_i.png" alt="" style="" class="ok_col_jb">`);
-        } else if(e.target.className == "ok_name_jb"){
-            var name = $(tr.children[0].children[0]).val();
-            $(tr.children[0]).text(name);
-            $(tr.children[1]).html(`<img src="/images/pencil.png" alt="" style="" class="edit_name_jb">`);
-
-            for (var i=0; i < arrJobs.length-1; i++) {
-                if (arrJobs[i]['ID'] == id_job) {
-                    arrJobs[i]['Название'] = $(tr.children[0]).text();
-                    arrJobs[i]['Количество'] = $(tr.children[3]).text();
-                    arrJobs[i]['Сумма'] = $(tr.children[6]).text();
+            var parents = $(e.target).parents();
+            for (var i=0; i < parents.length; i++){
+                if (parents[i].tagName == "TR"){
+                    var tr = parents[i];
                 }
             }
 
-        } else if (e.target.className == "ok_col_jb") {
-            var name = $(tr.children[3].children[0]).val();
-            $(tr.children[3]).text(name);
-            $(tr.children[4]).html(`<img src="/images/pencil.png" alt="" style="" class="edit_col_jb">`);
+            var room = $('#activeRoom p:eq(0)').text();
+            var category = $('.title_rcb h3').text().split(' → ')[0];
+            var subcategory = $('.title_rcb h3').text().split(' → ')[1];
+            var id_job = $(tr.children[7]).text();
 
-            var price = $(tr.children[5]).text();
-            $(tr.children[6]).text(price*name);
+            var smeta = JSON.parse(sessionStorage.getItem('SMETA'));
+            var arrJobs = smeta[room][category][subcategory];
 
-            var newSum = 0;
-            for (var i=0; i < arrJobs.length-1; i++) {
-                if (arrJobs[i]['ID'] == id_job) {
-                    arrJobs[i]['Название'] = $(tr.children[0]).text();
-                    arrJobs[i]['Количество'] = $(tr.children[3]).text();
-                    arrJobs[i]['Сумма'] = $(tr.children[6]).text();
+            if (e.target.className == "edit_name_jb"){
+                var name = $(tr.children[0]).text();
+                $(tr.children[0]).html(`<input type="text" class="table_input" value="${name}">`);
+                $(tr.children[1]).html(`<img src="/images/save_i.png" alt="" style="" class="ok_name_jb">`);
+            } else if(e.target.className == "edit_col_jb") {
+                var name = $(tr.children[3]).text();
+                $(tr.children[3]).html(`<input type="text" class="table_input" value="${name}" style="text-align: center;">`);
+                $(tr.children[4]).html(`<img src="/images/save_i.png" alt="" style="" class="ok_col_jb">`);
+            } else if(e.target.className == "ok_name_jb"){
+                var name = $(tr.children[0].children[0]).val();
+                $(tr.children[0]).text(name);
+                $(tr.children[1]).html(`<img src="/images/pencil.png" alt="" style="" class="edit_name_jb">`);
+
+                for (var i=0; i < arrJobs.length-1; i++) {
+                    if (arrJobs[i]['ID'] == id_job) {
+                        arrJobs[i]['Название'] = $(tr.children[0]).text();
+                        arrJobs[i]['Количество'] = $(tr.children[3]).text();
+                        arrJobs[i]['Сумма'] = $(tr.children[6]).text();
+                    }
                 }
-                newSum += Number(arrJobs[i]['Сумма']);
+
+            } else if (e.target.className == "ok_col_jb") {
+                var name = $(tr.children[3].children[0]).val();
+                $(tr.children[3]).text(name);
+                $(tr.children[4]).html(`<img src="/images/pencil.png" alt="" style="" class="edit_col_jb">`);
+
+                var price = $(tr.children[5]).text();
+                $(tr.children[6]).text(price*name);
+
+                var newSum = 0;
+                for (var i=0; i < arrJobs.length-1; i++) {
+                    if (arrJobs[i]['ID'] == id_job) {
+                        arrJobs[i]['Название'] = $(tr.children[0]).text();
+                        arrJobs[i]['Количество'] = $(tr.children[3]).text();
+                        arrJobs[i]['Сумма'] = $(tr.children[6]).text();
+                    }
+                    newSum += Number(arrJobs[i]['Сумма']);
+                }
+                arrJobs[arrJobs.length-1]["Сумма"] = newSum;
+
+                refreshSummSubCategory(category, subcategory, newSum);
+
             }
-            arrJobs[arrJobs.length-1]["Сумма"] = newSum;
+            smeta[room][category][subcategory] = arrJobs;
+            sessionStorage.setItem('SMETA', JSON.stringify(smeta));
+            Сonsolidated();
 
-            refreshSummSubCategory(category, subcategory, newSum);
-
+        } else if (cls == 'editLine') {
+            alert('Редактирование');
+        } else if (cls == 'removeLine') {
+            alert('Удаление');
         }
-        smeta[room][category][subcategory] = arrJobs;
-        sessionStorage.setItem('SMETA', JSON.stringify(smeta));
-        Сonsolidated();
 
     });
 
@@ -1383,7 +1512,7 @@ $(document).ready(function(){
             $('.modal_body').html(`
                 <div class="room_row">
                     <input type="text" class="room_input" id="nameRoom" placeholder="Название комнаты">
-                    <button class="room_modal" id="newRoomBD">Создать</button>
+                    <button class="room_modal createRecord" id="ButRoom">Создать</button>
                 </div>
             `);
         } else if (id.indexOf('Type') != -1) {
@@ -1391,7 +1520,7 @@ $(document).ready(function(){
             $('.modal_body').html(`
                 <div class="room_row">
                     <input type="text" class="room_input" id="TypeJob" placeholder="Тип работ">
-                    <button class="room_modal" id="newRoomBD">Создать</button>
+                    <button class="room_modal createRecord" id="ButType">Создать</button>
                 </div>
             `);
         } else if (id.indexOf('Object') != -1) {
@@ -1399,14 +1528,14 @@ $(document).ready(function(){
             $('.modal_body').html(`
                 <div class="room_row">
                     <input type="text" class="room_input" id="Object" placeholder="Объект работ">
-                    <button class="room_modal" id="newRoomBD">Создать</button>
+                    <button class="room_modal createRecord" id="ButObject">Создать</button>
                 </div>
             `);
         } else if (id.indexOf('Job') != -1) {
             $('.title_left').text('Новое наименование работ');
             $('.modal_body').html(`
                 <div class="room_row">
-                    <input type="text" class="room_input" id="NameJob" placeholder="Тип работ">
+                    <input type="text" class="room_input" id="NameJob" placeholder="Введите наименование работы">
                 </div>
                 <div class="room_row">
                     <select class="room_input">
@@ -1418,10 +1547,42 @@ $(document).ready(function(){
                     <input type="text" class="room_input" id="Price" placeholder="Цена">
                 </div>
                 <div class="room_row">
-                    <button class="room_modal" id="newRoomBD">Создать</button>
+                    <button class="room_modal createRecord" id="ButJob">Создать</button>
                 </div>
             `);
         }
+        $('input:eq(0)').focus();
+    })
+    $(document).delegate('.createRecord', 'click', (e) => {
+        let id = e.target.id;
+        var data = {};
+        if (id != 'ButJob') {
+            data.Name = $('.room_row input').val();
+            data.Type = id;
+        } else {
+            data.Name = $('#NameJob').val();
+            data.UnitMe = $('.room_row select option:selected').text();
+            data.Price = $('#Price').val();
+            data.Type = id;
+        }
+
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            url: '/api/savedata/saveNewRecordSmetaSettings'
+        }).done(data => {
+            if(data.ok){
+                console.log(data);
+                resetValueInputAndSelect();
+                $('.background_modal').hide();
+                SelectQueryActiveItemMenu();
+            } else {
+                console.log(data.err);
+                alert(data.text);
+            }
+        });
+
     })
 
 });  

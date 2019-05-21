@@ -767,6 +767,9 @@ td img{
 .table_60 tbody td:nth-child(3), .table_80 tbody td:nth-child(3) {
     text-align: left;
 }
+.table_60 th:nth-child(2), .table_80 th:nth-child(2) {
+    text-align: left;
+}
 .table_my th{
     text-align: center;
 }

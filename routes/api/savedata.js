@@ -197,5 +197,77 @@ router.post('/newdocument', (req, res) => {
         res.json({ ok: false, text: 'Ошибка, попробуйте позже!', fields});
     })
 });
+router.post('/saveNewRecordSmetaSettings', async (req, res) => {
+    const type = req.body.Type;
+    const name = req.body.Name;
+
+    if (type == 'ButRoom') {
+        var lastName = await models.Rooms.findOne({Name: name});
+        if (lastName) {
+            res.json({ok: false, text: 'Комната уже существует', err: 'Нет описания'});
+            return;
+        } else {
+            try {
+                await models.Rooms.create({Name: name, Status: true});
+                res.json({ok: true});
+                return;
+            } catch (e) {
+                console.log(err);
+                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            }
+        }
+        
+    } else if (type == 'ButType') {
+        var lastType = await models.TypeJobs.findOne({Name: name});
+        if (lastType) {
+            res.json({ok: false, text: 'Такой тип работ уже существует', err: 'Нет описания'});
+            return;
+        } else {
+            try {
+                await models.TypeJobs.create({Name: name, Status: true});
+                res.json({ok: true});
+                return;
+            } catch (e) {
+                console.log(err);
+                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            }
+        }
+    } else if (type == 'ButObject') {
+        var lastObject = await models.ObjectJobs.findOne({Name: name});
+        if (lastObject) {
+            res.json({ok: false, text: 'Такой объект работ уже существует', err: 'Нет описания'});
+            return;
+        } else {
+            try {
+                await models.ObjectJobs.create({Name: name, Status: true});
+                res.json({ok: true});
+                return;
+            } catch (e) {
+                console.log(err);
+                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            }
+        }
+    } else if (type == 'ButJob') {
+        var unitme = req.body.UnitMe;
+        var price = req.body.Price;
+
+        var lastJobs = await models.JobItems.findOne({Name: name});
+        if (lastJobs) {
+            res.json({ok: false, text: 'Такой объект работ уже существует', err: 'Нет описания'});
+            return;
+        } else {
+            try {
+                await models.JobItems.create({Name: name, Price: price, UnitMe: unitme, Status: true});
+                res.json({ok: true});
+                return;
+            } catch (e) {
+                console.log(err);
+                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            }
+        }
+    } else {
+        res.json({ok: false, text: 'Неизвестный запрос', err: 'ID кнопки не найден'});
+    }
+});
 
 module.exports = router;

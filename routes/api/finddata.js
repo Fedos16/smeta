@@ -54,5 +54,35 @@ router.post('/findItemsJobs', (req, res) => {
         res.json({ok: false, text: 'Сервер временно недоступен', err})
     });
 });
+router.post('/findAllRooms', (req, res) => {
+    models.Rooms.find()
+    .then(data => {
+        res.json({ok: true, data});
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({ok: false, text: 'Сервер временно недоступен', err})
+    });
+});
+router.post('/findAllTypeJobs', (req, res) => {
+    models.TypeJobs.find()
+    .then(data => {
+        res.json({ok: true, data});
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({ok: false, text: 'Сервер временно недоступен', err})
+    });
+});
+router.post('/findAllObjectsJob', (req, res) => {
+    models.ObjectJobs.find()
+    .then(data => {
+        res.json({ok: true, data});
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({ok: false, text: 'Сервер временно недоступен', err})
+    });
+})
 
 module.exports = router;
