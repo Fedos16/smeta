@@ -130,8 +130,9 @@ $(document).ready(function(){
                             <td class="removeLine"><img src="/images/remove.png"></td>
                         </tr>
                     `);
-                    $('.body_content').show();
+                    
                 }
+                $('.body_content').show();
             } else {
                 $('.body_content').show();
                 console.log(data.err);
@@ -238,6 +239,36 @@ $(document).ready(function(){
             }
         });
     }
+    var getArchitecture = () => {
+        $('.table_data tbody').append(`
+            <tr>
+                <td hidden>ID</td>
+                <td>1</td>
+                <td>Демонтаж плинтуса</td>
+                <td>
+                    <select>
+                        <option value="0">Комната</option>
+                        <option value="1">Ванная</option>
+                        <option value="2">Туалет</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="0">Демонтажные работы</option>
+                        <option value="1">Черновые отделочные работы</option>
+                        <option value="2">Чистовые отделочные работы</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="0">Полы</option>
+                        <option value="1">Электрика</option>
+                        <option value="2">Потолки</option>
+                    </select>
+                </td>
+            </tr>
+        `);
+    }
     var SelectQueryActiveItemMenu = () => {
         let text = $('#active_menu_item').text();
 
@@ -256,108 +287,294 @@ $(document).ready(function(){
         if (item == 'Архитектура сметы'){
             $('.body_content').removeClass('body_content_row');
             $('.body_content').html(`
-                <div class="line_status">Статусная строка. Показываются незадействованные объекты</div>
-                <table class="table_data">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th class="size_20">Комната</th>
-                            <th class="size_20">Тип работ</th>
-                            <th class="size_20">Объект работ</th>
-                            <th class="size_20">Наименование работ</th>
-                            <th class="size_20">Формула р-та</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="body_content_row">
+                    <table class="table_data table_align_left">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="size_40">Наименование работ</th>
+                                <th class="size_10">Комната</th>
+                                <th class="size_20">Тип работ</th>
+                                <th class="size_10">Объект работ</th>
+                                <th class="size_20">Формула р-та</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             `);
-            // Запрос из бд
+            getArchitecture();
         } else if (item == 'Комнаты') {
-            $('.body_content').addClass('body_content_row');
+            $('.body_content').removeClass('body_content_row');
             $('.body_content').html(`
-                <table class="table_data table_60">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Название комнаты</th>
-                            <th>Статус</th>
-                            <th class="size_10"></th>
-                            <th class="size_10"></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                
-                <button id="create_new_Room" class="create_new">Новая комната</button>
+                <div class="body_content_row">
+                    <div class="body_content_column">
+                        <table class="table_data table_align_left">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Название комнаты</th>
+                                    <th>Статус</th>
+                                    <th class="size_10"></th>
+                                    <th class="size_10"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="body_content_column column_auto">
+                        <button id="create_new_Room" class="create_new">Новая комната</button>
+                    </div>
+                </div>
             `);
         } else if (item == 'Тип работ') {
-            $('.body_content').addClass('body_content_row');
+            $('.body_content').removeClass('body_content_row');
             $('.body_content').html(`
-                <table class="table_data table_60">
-                    <thead>
-                        <tr>
-                        <th>#</th>
-                        <th>Тип работ</th>
-                        <th>Статус</th>
-                        <th class="size_10"></th>
-                        <th class="size_10"></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                
-                <button id="create_new_Type" class="create_new">Новый тип работ</button>
+                <div class="body_content_row">
+                    <div class="body_content_column">
+                        <table class="table_data table_align_left">
+                            <thead>
+                                <tr>
+                                <th>#</th>
+                                <th>Тип работ</th>
+                                <th>Статус</th>
+                                <th class="size_10"></th>
+                                <th class="size_10"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="body_content_column column_auto">
+                        <button id="create_new_Type" class="create_new">Новый тип работ</button>
+                    </div>
+                </div>
             `);
         } else if (item == 'Объект работ') {
-            $('.body_content').addClass('body_content_row');
+            $('.body_content').removeClass('body_content_row');
             $('.body_content').html(`
-                <table class="table_data table_60">
-                    <thead>
-                        <tr>
-                        <th>#</th>
-                        <th>Объект работ</th>
-                        <th>Статус</th>
-                        <th class="size_10"></th>
-                        <th class="size_10"></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                
-                <button id="create_new_Object" class="create_new">Новый объект работ</button>
+                <div class="body_content_row">
+                    <div class="body_content_column">
+                        <table class="table_data table_align_left">
+                            <thead>
+                                <tr>
+                                <th>#</th>
+                                <th>Объект работ</th>
+                                <th>Статус</th>
+                                <th class="size_10"></th>
+                                <th class="size_10"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="body_content_column column_auto">
+                        <button id="create_new_Object" class="create_new">Новый объект работ</button>
+                    </div>
+                </div>
             `);
         } else if (item == 'Наименование работ') {
             $('.body_content').removeClass('body_content_row');
             $('.body_content').hide();
             $('.body_content').html(`
                 <div class="body_content_row">
-                    <label for="upload_file_node" id="upload_foto" class="upload_excel_file">
-                        <input type="file" id="upload_file_node" id="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                        Загрузить файл
-                    </label>
-                </div>
-                <div class="body_content_row">
-                    <table class="table_data table_80">
-                        <thead>
-                            <tr>
-                            <th>#</th>
-                            <th>Наименование работы</th>
-                            <th>Ед. изм.</th>
-                            <th>Цена</th>
-                            <th>Статус</th>
-                            <th class="size_10"></th>
-                            <th class="size_10"></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <button id="create_new_Job" class="create_new">Создать</button>
+                    <div class="body_content_column">
+                        <table class="table_data table_align_left">
+                            <thead>
+                                <tr>
+                                <th>#</th>
+                                <th>Наименование работы</th>
+                                <th>Ед. изм.</th>
+                                <th>Цена</th>
+                                <th>Статус</th>
+                                <th class="size_10"></th>
+                                <th class="size_10"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="body_content_column column_auto">
+                        <button id="create_new_Job" class="create_new">Создать</button>
+                        <label for="upload_file_node" id="upload_foto" class="upload_excel_file">
+                            <input type="file" id="upload_file_node" id="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            Загрузить файл
+                        </label>
+                    </div>
                 </div>
             `);
         } else {
             $('.body_content').html('<h1>Неизвестный раздел</h1>');
         }
         SelectQueryActiveItemMenu();
+    }
+    var CreateOrEditNewElement = (type) => {
+
+        let classButton = 'createRecord';
+        if (type == 'Edit') {
+            classButton = 'editRecord';
+            var id = JSON.parse(sessionStorage.getItem('RowInfo')).id;
+        }
+
+        let itemMenu = $('#active_menu_item').text();
+        
+        $('body').css('overflow', 'hidden');
+        if (itemMenu == 'Комнаты') {
+            $('.modal_body').html(`
+                <div class="room_row">
+                    <input type="text" class="room_input" id="nameRoom" placeholder="Название комнаты">
+                    <button class="room_modal ${classButton}" id="ButRoom">Сохранить</button>
+                </div>
+            `);
+            let title = 'Новая комната';
+            if (type == 'Edit') {
+                title = 'Редактирование комнаты';
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify({id}),
+                    contentType: 'application/json',
+                    url: '/api/finddata/findRoomById'
+                }).done(async function(data){
+                    if(data.ok){
+                        console.log(data);
+                        $('#nameRoom').val(`${data.data.Name}`);
+                    } else {
+                        alert(data.text);
+                        console.log(data.error);
+                    }
+                });
+            }
+            $('.title_left').text(`${title}`);
+        } else if (itemMenu == 'Тип работ') {
+            $('.modal_body').html(`
+                <div class="room_row">
+                    <input type="text" class="room_input" id="TypeJob" placeholder="Тип работ">
+                    <button class="room_modal ${classButton}" id="ButType">Сохранить</button>
+                </div>
+            `);
+            let title = 'Новый тип работ';
+            if (type == 'Edit') {
+                title = 'Редактирование типа работ';
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify({id}),
+                    contentType: 'application/json',
+                    url: '/api/finddata/findTypeJobById'
+                }).done(async function(data){
+                    if(data.ok){
+                        console.log(data);
+                        $('#TypeJob').val(`${data.data.Name}`);
+                    } else {
+                        alert(data.text);
+                        console.log(data.error);
+                    }
+                });
+            }
+            $('.title_left').text(`${title}`);
+        } else if (itemMenu == 'Объект работ') {
+            $('.modal_body').html(`
+                <div class="room_row">
+                    <input type="text" class="room_input" id="Object" placeholder="Объект работ">
+                    <button class="room_modal ${classButton}" id="ButObject">Сохранить</button>
+                </div>
+            `);
+            let title = 'Новый объект работ';
+            if (type == 'Edit') {
+                title = 'Редактирование объекта работ';
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify({id}),
+                    contentType: 'application/json',
+                    url: '/api/finddata/findObjectById'
+                }).done(async function(data){
+                    if(data.ok){
+                        console.log(data);
+                        $('#Object').val(`${data.data.Name}`);
+                    } else {
+                        alert(data.text);
+                        console.log(data.error);
+                    }
+                });
+            }
+            $('.title_left').text(`${title}`);
+        } else if (itemMenu == 'Наименование работ') {
+            $('.modal_body').html(`
+                <div class="room_row">
+                    <input type="text" class="room_input" id="NameJob" placeholder="Введите наименование работы">
+                </div>
+                <div class="room_row">
+                    <select class="room_input" id="UnitMe">
+                        <option value="0">Единица измерения</option>
+                        <option value="м/п">м/п</option>
+                        <option value="м2">м2</option>
+                        <option value="кг">кг</option>
+                    </select>
+                    <input type="text" class="room_input" id="Price" placeholder="Цена">
+                </div>
+                <div class="room_row">
+                    <button class="room_modal ${classButton}" id="ButJob">Сохранить</button>
+                </div>
+            `);
+            let title = 'Новое наименование работ';
+            if (type == 'Edit') {
+                title = 'Редактирование наименования работ';
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify({id}),
+                    contentType: 'application/json',
+                    url: '/api/finddata/findNameJobById'
+                }).done(async function(data){
+                    if(data.ok){
+                        console.log(data);
+                        $('#NameJob').val(`${data.data.Name}`);
+                        $('#Price').val(`${data.data.Price}`);
+                        $(`.room_input option[value="${data.data.UnitMe}"]`).attr('selected', 'true');
+                    } else {
+                        alert(data.text);
+                        console.log(data.error);
+                    }
+                });
+            }
+            $('.title_left').text(`${title}`);
+        }
+        $('.background_modal').show();
+        $('input:eq(0)').focus();
+    };
+    var RequestError = (data) => {
+        console.log(data);
+        if ('fields' in data) {
+            for (let i=0; i < data.fields.length; i++) {
+                $(`#${data.fields[i]}`).addClass('error');
+            }
+            $('p.error').remove();
+            $($('.modal_body .room_row')[$('.modal_body .room_row').length-1]).after(`<p class="error">${data.text}</p>`)
+        } else {
+            alert(data.text);
+            console.log(data.err);
+        }
+    }
+    var RemoveRecord = () => {
+        let itemMenu = $('#active_menu_item').text();
+        var id = JSON.parse(sessionStorage.getItem('RowInfo')).id;
+        let data = {
+            Id: id,
+            Type: itemMenu
+        }
+
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            url: '/api/removedata/removeRecordAdmin'
+        }).done(async function(data){
+            if(data.ok){
+                console.log(data);
+                SelectQueryActiveItemMenu();
+            } else {
+                RequestError(data);
+            }
+        });
+
     }
 
     // Функция обновления суммы подкатегории
@@ -652,10 +869,12 @@ $(document).ready(function(){
         }
     }
 
-    $(document).delegate( "input, select", "focus", (e) => {
+    // Сброс класса ERROR
+    $(document).delegate( "input, select, textarea", "focus", (e) => {
         $('input').removeClass('error')
         $('select').removeClass('error')
         $('.status_body').css('opacity', 0);
+        $('p.error').remove();
     });
 
     $('.h_user img').on('click', (e) => {
@@ -1146,7 +1365,39 @@ $(document).ready(function(){
                         alert('Данные успешно загружены');
                         getItemsJobs();
                     } else {
-                        $('#upload_foto').text(data.text);
+                        alert(data.text);
+                    }
+                });
+            } else {
+                console.log(data);
+            }
+        });
+    });
+    $(document).delegate("#upload_file_arch", "change", (e) => {
+
+        var formData = new FormData();
+        formData.append('file', $('#upload_file_arch')[0].files[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/savedata/saveexcel',
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done(function(data){
+            if (data.ok){
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify({path: data.path}),
+                    contentType: 'application/json',
+                    url: '/api/savedata/ImportDataByExcelForArch',
+                }).done(function(data){
+                    if (data.ok){
+                        $('#upload_file_arch').val("");
+                        alert('Данные успешно загружены');
+                        getArchitecture();
+                    } else {
+                        alert(data.text);
                     }
                 });
             } else {
@@ -1381,9 +1632,13 @@ $(document).ready(function(){
             Сonsolidated();
 
         } else if (cls == 'editLine') {
-            alert('Редактирование');
+            let id = $($($(e.target).closest('tr')[0]).find('td')[0]).text();
+            sessionStorage.setItem('RowInfo', JSON.stringify({id}));
+            CreateOrEditNewElement('Edit');
         } else if (cls == 'removeLine') {
-            alert('Удаление');
+            let id = $($($(e.target).closest('tr')[0]).find('td')[0]).text();
+            sessionStorage.setItem('RowInfo', JSON.stringify({id}));
+            RemoveRecord();
         }
 
     });
@@ -1504,55 +1759,8 @@ $(document).ready(function(){
     });
 
     $(document).delegate('.create_new', 'click', (e) => {
-        let id = e.target.id;
-        $('.background_modal').show();
-        $('body').css('overflow', 'hidden');
-        if (id.indexOf('Room') != -1) {
-            $('.title_left').text('Новая комната');
-            $('.modal_body').html(`
-                <div class="room_row">
-                    <input type="text" class="room_input" id="nameRoom" placeholder="Название комнаты">
-                    <button class="room_modal createRecord" id="ButRoom">Создать</button>
-                </div>
-            `);
-        } else if (id.indexOf('Type') != -1) {
-            $('.title_left').text('Новый тип работ');
-            $('.modal_body').html(`
-                <div class="room_row">
-                    <input type="text" class="room_input" id="TypeJob" placeholder="Тип работ">
-                    <button class="room_modal createRecord" id="ButType">Создать</button>
-                </div>
-            `);
-        } else if (id.indexOf('Object') != -1) {
-            $('.title_left').text('Новый объект работ');
-            $('.modal_body').html(`
-                <div class="room_row">
-                    <input type="text" class="room_input" id="Object" placeholder="Объект работ">
-                    <button class="room_modal createRecord" id="ButObject">Создать</button>
-                </div>
-            `);
-        } else if (id.indexOf('Job') != -1) {
-            $('.title_left').text('Новое наименование работ');
-            $('.modal_body').html(`
-                <div class="room_row">
-                    <input type="text" class="room_input" id="NameJob" placeholder="Введите наименование работы">
-                </div>
-                <div class="room_row">
-                    <select class="room_input">
-                        <option value="0">Единица измерения</option>
-                        <option value="1">м/п</option>
-                        <option value="2">м2</option>
-                        <option value="3">кг</option>
-                    </select>
-                    <input type="text" class="room_input" id="Price" placeholder="Цена">
-                </div>
-                <div class="room_row">
-                    <button class="room_modal createRecord" id="ButJob">Создать</button>
-                </div>
-            `);
-        }
-        $('input:eq(0)').focus();
-    })
+        CreateOrEditNewElement('Create');
+    });
     $(document).delegate('.createRecord', 'click', (e) => {
         let id = e.target.id;
         var data = {};
@@ -1578,11 +1786,40 @@ $(document).ready(function(){
                 $('.background_modal').hide();
                 SelectQueryActiveItemMenu();
             } else {
-                console.log(data.err);
-                alert(data.text);
+                RequestError(data);
             }
         });
 
+    });
+    $(document).delegate('.editRecord', 'click', (e) => {
+        let id = e.target.id;
+        var data = {};
+        if (id != 'ButJob') {
+            data.Name = $('.room_row input').val();
+            data.Type = id;
+        } else {
+            data.Name = $('#NameJob').val();
+            data.UnitMe = $('.room_row select option:selected').text();
+            data.Price = $('#Price').val();
+            data.Type = id;
+        }
+        data.Id = JSON.parse(sessionStorage.getItem('RowInfo')).id;
+
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            url: '/api/updatedata/editRecordSmetaSettings'
+        }).done(data => {
+            if(data.ok){
+                console.log(data);
+                resetValueInputAndSelect();
+                $('.background_modal').hide();
+                SelectQueryActiveItemMenu();
+            } else {
+                RequestError(data);
+            }
+        });
     })
 
 });  

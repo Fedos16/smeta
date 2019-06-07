@@ -58,6 +58,7 @@ app.use('/api/auth', routes.auth);
 app.use('/api/savedata', routes.savedata);
 app.use('/api/finddata', routes.finddata);
 app.use('/api/updatedata', routes.updatedata);
+app.use('/api/removedata', routes.removedata);
 
 
 app.get('*', function(req, res){

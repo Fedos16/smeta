@@ -50,16 +50,36 @@ router.post('/savedatafromexcel', async (req, res) => {
     var workbook = new Excel.Workbook();
     var data = await workbook.xlsx.readFile(filename);
 
-    var arr = [];
+    let nameRooms = {
+        '1': 'Комната',
+        '2': 'Ванная',
+        '3': 'Туалет',
+        '4': 'Кухня',
+        '5': 'Коридор',
+        '6': 'Электрика',
+        '7': 'Лоджия/Балкон',
+        '8': 'Спец. монтаж'
+    }
+
+    let arrItemJob = [];
+    let arrRooms = [];
+    let arrTypeJobs = [];
+    let arrObjectJobs = [];
+
+    let objRooms = {};
+    let objTypeJobs = {};
+    let objObjectJobs = {};
 
     var worksheet = workbook.getWorksheet(data.worksheets[0].name); 
     worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
         
+        // Наименование работ
         try{
             var job_j = row.values[1].richText[0].text;
         } catch(e){
             var job_j = row.values[1];
         }
+        // Еденица измерения
         try{
             var unit_j = row.values[2].richText[0].text;
         } catch(e){
@@ -71,27 +91,165 @@ router.post('/savedatafromexcel', async (req, res) => {
         } catch(e){
             var price = row.values[6];
         }
+        // Тип работ
+        try{
+            var type_j = row.values[3].richText[0].text;
+        } catch(e){
+            var type_j = row.values[3];
+        }
+        // Объект работ
+        try{
+            var obj_j = row.values[4].richText[0].text;
+        } catch(e){
+            var obj_j = row.values[4];
+        }
+        // Номера комнат
+        try{
+            var room_j = row.values[8].richText[0].text;
+        } catch(e){
+            var room_j = row.values[8];
+        }
 
         if (job_j != null && unit_j != null && price != null && price != "цена") {
-            arr.push({
+            arrItemJob.push({
                 Name: job_j,
                 Price: price,
                 UnitMe: unit_j,
                 Status: true
             });
+            objTypeJobs[type_j] = true;
+            objObjectJobs[obj_j] = true;
         }
+
+        if (room_j != null) {
+            objRooms[nameRooms[room_j]] = true;
+        }
+
     });
 
-    await models.JobItems.remove();
-    models.JobItems.insertMany(arr)
+    let obj = Object.keys(objRooms);
+    for (let x=0; x < obj.length; x++) {
+        arrRooms.push({
+            Name: obj[x],
+            Status: true
+        });
+    }
+    obj = Object.keys(objTypeJobs);
+    for (let x=0; x < obj.length; x++) {
+        arrTypeJobs.push({
+            Name: obj[x],
+            Status: true
+        });
+    }
+    obj = Object.keys(objObjectJobs);
+    for (let x=0; x < obj.length; x++) {
+        arrObjectJobs.push({
+            Name: obj[x],
+            Status: true
+        });
+    }
+
+    try {
+        await models.JobItems.remove();
+        await models.Rooms.remove();
+        await models.TypeJobs.remove();
+        await models.ObjectJobs.remove();
+    } catch (err) {
+        console.log('---------- ОШИБКА ОЧИСТКИ БД ----------');
+        console.log(err);
+        res.json({ok: false, text: 'Сервер временно недоступен'});
+    }
+
+    try {
+        await models.JobItems.insertMany(arrItemJob);
+        await models.Rooms.insertMany(arrRooms);
+        await models.TypeJobs.insertMany(arrTypeJobs);
+        await models.ObjectJobs.insertMany(arrObjectJobs);
+
+    } catch (err) {
+        console.log('---------- ОШИБКА ЗАПИСИ В БД ----------');
+        console.log(err);
+        res.json({ok: false, text: 'Сервер временно недоступен'});
+    }
+
+    res.json({ok: true, text: "Данные загружены!"});
+
+})
+router.post('/ImportDataByExcelForArch', async (req, res) => {
+    const path_s = req.body.path;
+
+    var filename = path.join(appRoot, path_s);
+    var workbook = new Excel.Workbook();
+    var data = await workbook.xlsx.readFile(filename);
+
+    var arr = {};
+    let namesRoom = {
+        '1': 'Комната',
+        '2': 'Ванная',
+        '3': 'Туалет',
+        '4': 'Кухня',
+        '5': 'Коридор',
+        '6': 'Электрика',
+        '7': 'Лоджия/Балкон',
+        '8': 'Спец. монтаж'
+    }
+
+    var worksheet = workbook.getWorksheet(data.worksheets[0].name); 
+    worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
+        
+        // Наименование работы
+        try{
+            var job_j = row.values[1].richText[0].text;
+        } catch(e){
+            var job_j = row.values[1];
+        }
+        // Еденица измерения
+        try{
+            var unit_j = row.values[2].richText[0].text;
+        } catch(e){
+            var unit_j = row.values[2];
+        }
+        // Тип работ
+        try{
+            var type_j = row.values[3].richText[0].text;
+        } catch(e){
+            var type_j = row.values[3];
+        }
+        // Объект работ
+        try{
+            var obj_j = row.values[4].richText[0].text;
+        } catch(e){
+            var obj_j = row.values[4];
+        }
+        // Номера комнат
+        try{
+            var room_j = row.values[5].richText[0].text;
+        } catch(e){
+            var room_j = row.values[5];
+        }
+        // Цена
+        try{
+            var price = row.values[6].result;
+        } catch(e){
+            var price = row.values[6];
+        }
+
+        if (job_j && unit_j && type_j && obj_j && room_j && price && room_j != null) {
+            let arrRoom = String(room_j).replace(/ /g, '').split(',');
+            for (let i=0; i < arrRoom.length; i++) {
+                arr[arrRoom[i]][type_j][obj_j] = [];
+            }
+        }
+
+    });
+
+    await models.Architecture.remove();
+    models.Architecture.insertMany(arr)
     .catch(err => {
-        res.json({ok: false, text: 'Ошибка записи Наименований работ'});
+        res.json({ok: false, text: 'Ошибка записи'});
     });
-
-    console.log(arr);
 
     res.json({ok: true, text: "Данные загружены!", data: arr});
-
 })
 router.post('/newpeople', async (req, res) => {
     const fio = req.body.fio;
@@ -202,67 +360,94 @@ router.post('/saveNewRecordSmetaSettings', async (req, res) => {
     const name = req.body.Name;
 
     if (type == 'ButRoom') {
-        var lastName = await models.Rooms.findOne({Name: name});
-        if (lastName) {
-            res.json({ok: false, text: 'Комната уже существует', err: 'Нет описания'});
-            return;
+        if (!name) {
+            let fields = ['nameRoom'];
+            res.json({ok: false, text: 'Заполните все поля', fields});
         } else {
-            try {
-                await models.Rooms.create({Name: name, Status: true});
-                res.json({ok: true});
+            var lastName = await models.Rooms.findOne({Name: name});
+            if (lastName) {
+                let fields = ['nameRoom'];
+                res.json({ok: false, text: 'Комната уже существует', err: 'Нет описания', fields});
                 return;
-            } catch (e) {
-                console.log(err);
-                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            } else {
+                try {
+                    await models.Rooms.create({Name: name, Status: true});
+                    res.json({ok: true});
+                    return;
+                } catch (e) {
+                    console.log(err);
+                    res.json({ok: false, text: 'Сервер временно недоступен', err});
+                }
             }
         }
-        
     } else if (type == 'ButType') {
-        var lastType = await models.TypeJobs.findOne({Name: name});
-        if (lastType) {
-            res.json({ok: false, text: 'Такой тип работ уже существует', err: 'Нет описания'});
-            return;
+        if (!name) {
+            let fields = ['TypeJob'];
+            res.json({ok: false, text: 'Заполните все поля', fields});
         } else {
-            try {
-                await models.TypeJobs.create({Name: name, Status: true});
-                res.json({ok: true});
+            var lastType = await models.TypeJobs.findOne({Name: name});
+            if (lastType) {
+                let fields = ['TypeJob'];
+                res.json({ok: false, text: 'Такой тип работ уже существует', err: 'Нет описания', fields});
                 return;
-            } catch (e) {
-                console.log(err);
-                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            } else {
+                try {
+                    await models.TypeJobs.create({Name: name, Status: true});
+                    res.json({ok: true});
+                    return;
+                } catch (e) {
+                    console.log(err);
+                    res.json({ok: false, text: 'Сервер временно недоступен', err});
+                }
             }
         }
     } else if (type == 'ButObject') {
-        var lastObject = await models.ObjectJobs.findOne({Name: name});
-        if (lastObject) {
-            res.json({ok: false, text: 'Такой объект работ уже существует', err: 'Нет описания'});
-            return;
+        if (!name) {
+            let fields = ['Object'];
+            res.json({ok: false, text: 'Заполните все поля', fields});
         } else {
-            try {
-                await models.ObjectJobs.create({Name: name, Status: true});
-                res.json({ok: true});
+            var lastObject = await models.ObjectJobs.findOne({Name: name});
+            if (lastObject) {
+                let fields = ['Object'];
+                res.json({ok: false, text: 'Такой объект работ уже существует', err: 'Нет описания', fields});
                 return;
-            } catch (e) {
-                console.log(err);
-                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            } else {
+                try {
+                    await models.ObjectJobs.create({Name: name, Status: true});
+                    res.json({ok: true});
+                    return;
+                } catch (e) {
+                    console.log(err);
+                    res.json({ok: false, text: 'Сервер временно недоступен', err});
+                }
             }
         }
     } else if (type == 'ButJob') {
         var unitme = req.body.UnitMe;
         var price = req.body.Price;
 
-        var lastJobs = await models.JobItems.findOne({Name: name});
-        if (lastJobs) {
-            res.json({ok: false, text: 'Такой объект работ уже существует', err: 'Нет описания'});
-            return;
+        if (!name || !price || price == '0' || unitme == 'Единица измерения') {
+            let fields = [];
+            if (!name) fields.push('NameJob');
+            if (!price || price == '0') fields.push('Price');
+            if (unitme == 'Единица измерения') fields.push('UnitMe');
+
+            res.json({ok: false, text: 'Заполните все поля', fields});
         } else {
-            try {
-                await models.JobItems.create({Name: name, Price: price, UnitMe: unitme, Status: true});
-                res.json({ok: true});
+            var lastJobs = await models.JobItems.findOne({Name: name});
+            if (lastJobs) {
+                let fields = ['NameJob'];
+                res.json({ok: false, text: 'Такой объект работ уже существует', err: 'Нет описания', fields});
                 return;
-            } catch (e) {
-                console.log(err);
-                res.json({ok: false, text: 'Сервер временно недоступен', err});
+            } else {
+                try {
+                    await models.JobItems.create({Name: name, Price: price, UnitMe: unitme, Status: true});
+                    res.json({ok: true});
+                    return;
+                } catch (e) {
+                    console.log(err);
+                    res.json({ok: false, text: 'Сервер временно недоступен', err});
+                }
             }
         }
     } else {

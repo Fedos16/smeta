@@ -5,6 +5,7 @@ const TypeJobs = require('./typeJobs');
 const ObjectJobs = require('./objectJobs');
 const JobItems = require('./jobitems');
 const Documents = require('./documents');
+const Architecture = require('./architecture');
 
 module.exports = {
   User,
@@ -13,5 +14,6 @@ module.exports = {
   TypeJobs,
   ObjectJobs,
   JobItems,
-  Documents
+  Documents,
+  Architecture
 };

@@ -93,5 +93,45 @@ router.post('/additional', (req, res) => {
     }
     
 });
+router.post('/removeRecordAdmin', (req, res) => {
+    const id = req.body.Id;
+    const type = req.body.Type;
+
+    if (type == 'Комнаты') {
+        models.Rooms.findByIdAndRemove(id)
+        .then(() => {
+            res.json({ok: true});
+        })
+        .catch(err => {
+            res.json({ok: false, text: 'Сервер временно недоступен', err});
+        });
+    } else if (type == 'Тип работ') {
+        models.TypeJobs.findByIdAndRemove(id)
+        .then(() => {
+            res.json({ok: true});
+        })
+        .catch(err => {
+            res.json({ok: false, text: 'Сервер временно недоступен', err});
+        });
+    } else if (type == 'Объект работ') {
+        models.ObjectJobs.findByIdAndRemove(id)
+        .then(() => {
+            res.json({ok: true});
+        })
+        .catch(err => {
+            res.json({ok: false, text: 'Сервер временно недоступен', err});
+        });
+    } else if (type == 'Наименование работ') {
+        models.JobItems.findByIdAndRemove(id)
+        .then(() => {
+            res.json({ok: true});
+        })
+        .catch(err => {
+            res.json({ok: false, text: 'Сервер временно недоступен', err});
+        });
+    } else {
+        res.json({ok: false, text: 'Не найден пункт меню', err: 'Проверка'});
+    }
+});
 
 module.exports = router;

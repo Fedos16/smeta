@@ -111,7 +111,13 @@ input[type="file"]{
     margin-top: -8px;
 }
 input.error, select.error{
-    border: 1px solid rgb(255, 0, 0);
+    border: 1px solid rgb(255, 0, 0) !important;
+}
+p.error {
+    width: 100%;
+    text-align: center;
+    color: red;
+    font-weight: bold;
 }
 .p_header{
     width: 100%;
@@ -321,6 +327,9 @@ table thead th{
     color: white;
     padding: 10px;
     text-align: left;
+    position: sticky;
+    top: 0px;
+    z-index: 10;
 }
 table tbody tr{
     border-bottom: 1px solid lightgray;
@@ -351,8 +360,21 @@ table tbody td img{
     align-items: flex-start;
     margin-bottom: 10px;
 }
+.body_content_column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.body_content_column:first-child {
+    margin-right: 20px;
+    height: 630px;
+    overflow: auto;
+}
+.column_auto {
+    width: auto;
+}
 .create_new {
-    margin: 0px auto;
+    margin-bottom: 15px;
     background-color: transparent;
     border: 2px solid #28c430;
     width: 200px;
@@ -770,18 +792,31 @@ td img{
 .table_60 th:nth-child(2), .table_80 th:nth-child(2) {
     text-align: left;
 }
+.table_align_left th{
+    text-align: left !important;
+}
 .table_my th{
     text-align: center;
 }
 th:nth-child(1){
     width: 50px !important;
 }
-th.size_20{
-    width: 20% !important;
+th.size_5{
+    width: 5% !important;
 }
 th.size_10{
     width: 10% !important;
 }
+th.size_20{
+    width: 20% !important;
+}
+th.size_30{
+    width: 30% !important;
+}
+th.size_40{
+    width: 40% !important;
+}
+
 
 th span{
     text-decoration: underline;
@@ -973,3 +1008,4 @@ div.falseSymbol::before {
 div.falseSymbol::after {
     transform: rotate(-45deg);
 }
+

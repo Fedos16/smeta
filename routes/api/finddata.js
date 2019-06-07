@@ -84,5 +84,61 @@ router.post('/findAllObjectsJob', (req, res) => {
         res.json({ok: false, text: 'Сервер временно недоступен', err})
     });
 })
+router.post('/getArchitecture', (req, res) => {
+    models.Architecture.find()
+    .sort({Room: 1})
+    .then(data => {
+        res.json({ok: true, data});
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({ok: false, text: 'Сервер временно недоступен', err})
+    });
+})
+
+router.post('/findRoomById', (req, res) => {
+    const id = req.body.id;
+
+    models.Rooms.findById(id, {Name: 1})
+    .then(val => {
+        res.json({ok: true, data: val});
+    })
+    .catch(err => {
+        res.json({ok: false, text: 'Сервер временно недоступен', error: err});
+    });
+});
+router.post('/findTypeJobById', (req, res) => {
+    const id = req.body.id;
+
+    models.TypeJobs.findById(id, {Name: 1})
+    .then(val => {
+        res.json({ok: true, data: val});
+    })
+    .catch(err => {
+        res.json({ok: false, text: 'Сервер временно недоступен', error: err});
+    });
+});
+router.post('/findObjectById', (req, res) => {
+    const id = req.body.id;
+
+    models.ObjectJobs.findById(id, {Name: 1})
+    .then(val => {
+        res.json({ok: true, data: val});
+    })
+    .catch(err => {
+        res.json({ok: false, text: 'Сервер временно недоступен', error: err});
+    });
+});
+router.post('/findNameJobById', (req, res) => {
+    const id = req.body.id;
+
+    models.JobItems.findById(id, {Name: 1, Price: 1, UnitMe: 1})
+    .then(val => {
+        res.json({ok: true, data: val});
+    })
+    .catch(err => {
+        res.json({ok: false, text: 'Сервер временно недоступен', error: err});
+    });
+});
 
 module.exports = router;
