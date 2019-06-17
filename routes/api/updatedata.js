@@ -3,7 +3,7 @@ const router = express.Router();
 const models = require('../../models');
 
 
-router.post('/rooms', (req, res) => {
+router.post('/UpdateSmeta', (req, res) => {
     const id = req.body.id;
     const data = req.body.data;
 

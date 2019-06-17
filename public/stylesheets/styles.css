@@ -142,20 +142,20 @@ p.error {
     justify-content: center;
     align-items: center;
     color: #ffffff;
-    font-size: 25px;
+    font-size: 20px;
 }
 .h_user{
     width: 17%;
     display: flex;
     justify-content: flex-end;
     color: #ffffff;
-    font-size: 20px;
+    font-size: 16px;
 }
 .h_user img{
     cursor: pointer;
-    width:25px;
-    height:25px;
-    margin-left: 20px;
+    width:20px;
+    height:20px;
+    margin-left: 15px;
 }
 
 .p_body{
@@ -212,10 +212,11 @@ p.error {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    padding-top: 10px;
 }
 .body_l{
     width: 100%;
-    max-width: 350px;
+    max-width: 250px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -225,7 +226,7 @@ p.error {
     margin-top: 10px;
 }
 .body_m{
-    width: 65%;
+    width: 100%;
     height: 100%;
     margin: 0px auto;
     display: flex;
@@ -235,6 +236,7 @@ p.error {
 }
 .body_r{
     width: 100%;
+    max-width: 300px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -264,7 +266,9 @@ p.error {
     cursor: pointer;
 }
 .item_left p{
+    width: 100%;
     cursor: pointer;
+    text-align: center;
 }
 #active_item_left{
     background-color: #283e5f;
@@ -343,8 +347,8 @@ table tbody td{
     text-align: left;
 }
 table tbody td img{
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
 .body_content{
@@ -444,12 +448,12 @@ table tbody td img{
 }
 
 .room{
-    width: 75%;
-    height: 60px;
+    width: 80%;
+    height: 50px;
     margin: 10px auto;
     border: 1px solid lightgray;
     color: #747474;
-    font-size: 18px;
+    font-size: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -457,7 +461,7 @@ table tbody td img{
 }
 .room_add{
     width: 60%;
-    height: 60px;
+    height: 40px;
     margin: 10px auto;
     border: 1px solid lightgray;
     color: #777777;
@@ -466,8 +470,9 @@ table tbody td img{
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 60px;
+    font-size: 50px;
     font-weight: bold;
+    user-select: none;
 }
 .room p{
     cursor: pointer;
@@ -494,6 +499,7 @@ table tbody td img{
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 .background_modal {
     width: 100%;
@@ -505,6 +511,7 @@ table tbody td img{
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 .room_room{
     width: 95%;
@@ -623,6 +630,7 @@ table tbody td img{
     height: 35px;
     display: flex;
     align-items: flex-start;
+    margin-top: 10px;
 }
 .type_jobs_col{
     width: 100%;
@@ -652,6 +660,7 @@ table tbody td img{
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    font-size: 14px;
 }
 .tj_icon{
     width: 10%;
@@ -669,6 +678,7 @@ table tbody td img{
     display: flex;
     flex-direction: column;
     position: relative;
+    z-index: 11;
 }
 .type_jobs_item ul{
     position: absolute;
@@ -681,13 +691,14 @@ table tbody td img{
     color: #202020;
     box-shadow: 0px 0px 10px lightgray;
     padding: 10px 0px;
+    font-size: 14px;
 }
 .type_jobs_item ul li{
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 10px;
+    padding: 5px 10px;
 }
 .type_jobs_item ul li:hover{
     background-color: #e7e7e7;
@@ -760,6 +771,8 @@ table tbody td img{
 }
 .body_content_jobs{
     margin-top: 20px;
+    height: 73vh;
+    overflow: auto;
 }
 .active_tr{
     background-color: #c9f189;
@@ -816,6 +829,12 @@ th.size_30{
 th.size_40{
     width: 40% !important;
 }
+.smeta-style th, .smeta-style td {
+    text-align: center !important;
+}
+.smeta-style th:first-child, .smeta-style td:first-child {
+    text-align: left !important;
+}
 
 
 th span{
@@ -831,7 +850,7 @@ th span:hover{
 }
 .table_input{
     width: 100%;
-    height: 35px;
+    height: 28px;
     font-size: 16px;
     padding: 10px;
 }
@@ -906,6 +925,7 @@ th span:hover{
     border-bottom: 1px solid white;
     padding: 5px;
 }
+
 .total_amount{
     width: 100%;
     margin: 15px 0px;
@@ -1007,5 +1027,166 @@ div.falseSymbol::before {
 }
 div.falseSymbol::after {
     transform: rotate(-45deg);
+}
+
+/* Свой собственный Select с поиском по данным */
+.SelectSpecialButton {
+    width: 95%;
+    margin: 0px auto;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0px 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    position: relative;
+}
+.SelectSpecialButton::after{
+    content: "";
+    border: 3px solid transparent;
+    border-top: 6px solid black;
+    position: absolute;
+    left: 97%;
+}
+.SelectSpecial {
+    position: absolute;
+    top: 200px;
+    left: 300px;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    max-height: 202px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    background-color: white;
+    padding: 10px;
+    overflow: auto;
+    border: 1px solid lightgray;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+}
+.SelectSpecial input {
+    width: 100%;
+    height: 30px;
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid lightgray;
+    cursor: text;
+}
+.SelectSpecial ul {
+    width: 100%;
+    height: 100%;
+    margin-top: 5px;
+}
+.SelectSpecial ul li {
+    width: 100%;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
+}
+.SelectSpecial ul li:hover{
+    background-color: rgba(0, 140, 255, 0.863);
+    color: white;
+}
+
+.myCheckBox {
+    width: 200px;
+    height: auto;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+    top: 300px;
+    left: 300px;
+    z-index: 10;
+    padding: 10px;
+}
+.myCheckBox ul li {
+    width: 100%;
+    display: flex;
+    height: 20px;
+    user-select: none;
+}
+.myCheckBox ul li:hover p {
+    font-weight: bold;
+}
+.myCheckBox ul li span {
+    width: 15px;
+    height: 15px;
+    border: 1px solid lightgray;
+    margin-right: 10px;
+    position: relative;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+}
+.myCheckBox div {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+.myCheckBox div p {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-size: 18px;
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid red;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+.activeSpan::after {
+    content: "";
+    background-color: transparent;
+    position: absolute;
+    left: 3.5px;
+    top: 0px;
+    width: 3px;
+    border-bottom: 2px solid #00afec;
+    height: 8px;
+    border-right: 2px solid #00afec;
+    transform: rotate(45deg);
+}
+.navigation_center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.navigation_center button {
+    position: relative;
+    width: 200px;
+    height: 40px;
+    background-color: white;
+    color: rgb(17, 17, 17);
+    border: 2px solid #3d84e0;
+    margin-right: 30px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.navigation_center button:hover {
+    background-color: #3d84e0;
+    color: white;
+}
+
+
+@media print { /* Стиль для печати */
+    body{
+        visibility: hidden;
+    }
+    /* Блок который нужно отобразить */
+    #table_smeta {
+        position: absolute;
+        top: 0px;
+        visibility: visible;
+        font-size: 12px;
+    }
 }
 

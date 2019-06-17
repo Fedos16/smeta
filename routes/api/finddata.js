@@ -12,25 +12,6 @@ router.post('/allpeople', (req, res) => {
         res.json({ok: false, text: 'Сервер временно недоступен!'});
     });
 });
-router.post('/findcategories', async (req, res) => {
-    const numRoom = req.body.numRoom;
-
-    var obj = {};
-
-    var categories = await models.Categories.find({RoomNumber: { "$in": [numRoom] }});
-    for (var i=0; i < categories.length; i++) {
-        var subcat = await models.Subcategories.find( { $and: [ {Categories: { "$in": [categories[i].Name] }}, {RoomNumber: { "$in": [numRoom] }} ]});
-        console.log(subcat);
-        var arr = [];
-        for (var x=0; x < subcat.length; x++){
-            arr.push(subcat[x].Name);
-        }
-        obj[categories[i].Name] = {
-            name: arr
-        }
-    }
-    res.json({ok: true, data: obj});
-});
 router.post('/findjobs', (req, res) => {
     const subcategory = req.body.subcategory;
     const category = req.body.category;
@@ -86,9 +67,9 @@ router.post('/findAllObjectsJob', (req, res) => {
 })
 router.post('/getArchitecture', (req, res) => {
     models.Architecture.find()
-    .sort({Room: 1})
-    .then(data => {
-        res.json({ok: true, data});
+    .then(async data => {
+        let rooms = await models.Rooms.find({Status: true});
+        res.json({ok: true, data, rooms});
     })
     .catch(err => {
         console.log(err);
@@ -138,6 +119,18 @@ router.post('/findNameJobById', (req, res) => {
     })
     .catch(err => {
         res.json({ok: false, text: 'Сервер временно недоступен', error: err});
+    });
+});
+router.post('/findTypeJobsArch', (req, res) => {
+    const type = req.body.type;
+
+    models.Architecture.find({NameRoom: type}, {Room: 1})
+    .then(arch => {
+        res.json({ok: true, data: arch});
+    })
+    .catch(err => {
+        console.log(err);
+        res.json({ok: false});
     });
 });
 

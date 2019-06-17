@@ -3,8 +3,11 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema(
   {
+    NameRoom: {
+      type: String
+    },
     Room: {
-        type: String
+        type: Object
     },
     Status: {
       type: Boolean,

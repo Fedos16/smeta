@@ -57,7 +57,7 @@ router.post('/savedatafromexcel', async (req, res) => {
         '4': 'Кухня',
         '5': 'Коридор',
         '6': 'Электрика',
-        '7': 'Лоджия/Балкон',
+        '7': 'Лоджия/балкон',
         '8': 'Спец. монтаж'
     }
 
@@ -65,6 +65,9 @@ router.post('/savedatafromexcel', async (req, res) => {
     let arrRooms = [];
     let arrTypeJobs = [];
     let arrObjectJobs = [];
+    let arrArch = [];
+
+    let arch = {};
 
     let objRooms = {};
     let objTypeJobs = {};
@@ -93,9 +96,9 @@ router.post('/savedatafromexcel', async (req, res) => {
         }
         // Тип работ
         try{
-            var type_j = row.values[3].richText[0].text;
+            var type_j = String(row.values[3].richText[0].text).replace('  ', ' ');
         } catch(e){
-            var type_j = row.values[3];
+            var type_j = String(row.values[3]).replace('  ', ' ');
         }
         // Объект работ
         try{
@@ -103,14 +106,26 @@ router.post('/savedatafromexcel', async (req, res) => {
         } catch(e){
             var obj_j = row.values[4];
         }
+        // Буква для формулы расчета
+        try {
+            var letter = row.values[7].richText[0].text;
+        } catch (e) {
+            var letter = row.values[7];
+        }
         // Номера комнат
         try{
-            var room_j = row.values[8].richText[0].text;
+            var room_j = String(row.values[9].richText[0].text).charAt(0).toUpperCase() + String(row.values[9].richText[0].text).substr(1);
         } catch(e){
-            var room_j = row.values[8];
+            var room_j = String(row.values[9]).charAt(0).toUpperCase() + String(row.values[9]).substr(1);
+        }
+        // Комнаты в которые входит наименование работ
+        try {
+            var arrRoom_j = row.values[5].richText[0].text;
+        } catch(e) {
+            var arrRoom_j = row.values[5];
         }
 
-        if (job_j != null && unit_j != null && price != null && price != "цена") {
+        if (job_j != null && unit_j != null && price != null && price != "цена" && arrRoom_j != null) {
             arrItemJob.push({
                 Name: job_j,
                 Price: price,
@@ -119,10 +134,69 @@ router.post('/savedatafromexcel', async (req, res) => {
             });
             objTypeJobs[type_j] = true;
             objObjectJobs[obj_j] = true;
+
+            let formula = 'unknown';
+            if (letter == 'а' || letter == 'a' || String(letter).charAt(0) == 'a' || String(letter).charAt(0) == 'а') {
+                formula = 'floorArea';
+            } else if (letter == 'б') {
+                formula = 'wallArea';
+            } else if (letter == 'в') {
+                formula = 'perimetr';
+            } else if (String(letter).indexOf('г') != -1) {
+                formula = String(letter).split(' ')[1];
+            }
+
+            let arrs = String(arrRoom_j).split(',');
+            if (String(arrRoom_j).indexOf('.') != -1) {
+                arrs = String(arrRoom_j).split('.');
+            }
+            for (let z = 0; z < arrs.length; z++) {
+                if (arrs[z].length > 1) {
+                    console.log(arrs);
+                }
+                let Name = nameRooms[arrs[z]];
+                if (Name in arch) {
+                    if (type_j in arch[Name]) {
+                        if (obj_j in arch[Name][type_j]) {
+                            arch[Name][type_j][obj_j].push({
+                                Name: job_j,
+                                UnitMe: unit_j,
+                                Price: price,
+                                Formula: formula
+                            });
+                        } else {
+                            arch[Name][type_j][obj_j] = [{
+                                Name: job_j,
+                                UnitMe: unit_j,
+                                Price: price,
+                                Formula: formula
+                            }];
+                        }
+                    } else {
+                        arch[Name][type_j] = {};
+                        arch[Name][type_j][obj_j] = [{
+                            Name: job_j,
+                            UnitMe: unit_j,
+                            Price: price,
+                            Formula: formula
+                        }];
+                    }
+                } else {
+                    arch[Name] = {};
+                    arch[Name][type_j] = {};
+                    arch[Name][type_j][obj_j] = [{
+                        Name: job_j,
+                        UnitMe: unit_j,
+                        Price: price,
+                        Formula: formula
+                    }];
+                }
+            }
+
         }
 
-        if (room_j != null) {
-            objRooms[nameRooms[room_j]] = true;
+        if (room_j != null && room_j != 'Undefined') {
+            objRooms[room_j] = true;
         }
 
     });
@@ -148,12 +222,21 @@ router.post('/savedatafromexcel', async (req, res) => {
             Status: true
         });
     }
+    obj = Object.keys(arch);
+    for (let x=0; x < obj.length; x++) {
+        arrArch.push({
+            NameRoom: obj[x],
+            Room: arch[obj[x]],
+            Status: true
+        })
+    }
 
     try {
         await models.JobItems.remove();
         await models.Rooms.remove();
         await models.TypeJobs.remove();
         await models.ObjectJobs.remove();
+        await models.Architecture.remove();
     } catch (err) {
         console.log('---------- ОШИБКА ОЧИСТКИ БД ----------');
         console.log(err);
@@ -165,6 +248,7 @@ router.post('/savedatafromexcel', async (req, res) => {
         await models.Rooms.insertMany(arrRooms);
         await models.TypeJobs.insertMany(arrTypeJobs);
         await models.ObjectJobs.insertMany(arrObjectJobs);
+        await models.Architecture.insertMany(arrArch);
 
     } catch (err) {
         console.log('---------- ОШИБКА ЗАПИСИ В БД ----------');
@@ -337,23 +421,24 @@ router.post('/newdocument', (req, res) => {
         if (!phone) fields.push('phoneClient');
 
         res.json({ok: false, text: 'Не все поля заполнены!', fields});
+    } else {
+        models.Documents.create({
+            IdObject: id,
+            AddressObject: adress,
+            DateCreate: dateCreated,
+            NameClient: name,
+            Telephone: phone,
+            Estimator: req.session.userLogin,
+    
+        })
+        .then(doc => {
+            res.json({ ok: true, text: 'Данные успешно сохранены', data:doc._id});
+        })
+        .catch(err => {
+            console.log(err);
+            res.json({ ok: false, text: 'Ошибка, попробуйте позже!', fields});
+        })
     }
-
-    models.Documents.create({
-        IdObject: id,
-        AddressObject: adress,
-        DateCreate: dateCreated,
-        NameClient: name,
-        Telephone: phone,
-        Estimator: req.session.userLogin,
-
-    })
-    .then(doc => {
-        res.json({ ok: true, text: 'Данные успешно сохранены', data:doc._id});
-    })
-    .catch(err => {
-        res.json({ ok: false, text: 'Ошибка, попробуйте позже!', fields});
-    })
 });
 router.post('/saveNewRecordSmetaSettings', async (req, res) => {
     const type = req.body.Type;
