@@ -1309,8 +1309,9 @@ $(document).ready(function(){
     });
     $(document).delegate('.tj_text', 'click', (e) => {
         let type = $(e.target).attr('title');
-        var room = $('#activeRoom p:eq(1)').text();
+        var room = $('#activeRoom p:eq(0)').text();
         let roomInfo = JSON.parse(localStorage.getItem('ROOM_INFO'));
+        let rooms = JSON.parse(localStorage.getItem('ROOMS'));
 
         let smeta = JSON.parse(localStorage.getItem('SMETA'));
 
