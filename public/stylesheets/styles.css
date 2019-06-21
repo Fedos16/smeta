@@ -338,13 +338,31 @@ table thead th{
 table tbody tr{
     border-bottom: 1px solid lightgray;
 }
-table tbody tr:not(.active_tr):hover{
+table tbody tr:hover:not(.new-row):not(.active_tr):not(.sub_title_row){
     background-color: rgba(211, 211, 211, 0.277);
 }
 table tbody td{
     height: 32px;
     padding: 5px 10px;
     text-align: left;
+}
+table tbody tr.new-row {
+    background-color: rgb(228, 228, 228);
+}
+table tbody td.appendNewRow {
+    text-align: center;
+    font-weight: bold;
+    color: #28c430;
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+    border: 2px solid #28c430;
+    border-right: none;
+    background-color: #28c4302c;
+}
+table tbody tr.sub_title_row {
+    text-align: center;
+    background-color: #283e5f3b;
 }
 table tbody td img{
     width: 20px;
@@ -692,6 +710,15 @@ table tbody td img{
     box-shadow: 0px 0px 10px lightgray;
     padding: 10px 0px;
     font-size: 14px;
+}
+.type_jobs_item ul::after{
+    content: "";
+    width: 300px;
+    height: 10px;
+    background-color: transparent;
+    position: absolute;
+    top: -7px;
+    left: 0px;
 }
 .type_jobs_item ul li{
     width: 100%;

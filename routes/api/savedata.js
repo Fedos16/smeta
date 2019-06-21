@@ -146,6 +146,15 @@ router.post('/savedatafromexcel', async (req, res) => {
                 formula = String(letter).split(' ')[1];
             }
 
+            arrItemJob.push({
+                Name: job_j,
+                Price: price,
+                UnitMe: unit_j,
+                Formula: formula,
+                Status: true
+            });
+            
+
             let arrs = String(arrRoom_j).split(',');
             if (String(arrRoom_j).indexOf('.') != -1) {
                 arrs = String(arrRoom_j).split('.');
@@ -258,83 +267,7 @@ router.post('/savedatafromexcel', async (req, res) => {
 
     res.json({ok: true, text: "Данные загружены!"});
 
-})
-router.post('/ImportDataByExcelForArch', async (req, res) => {
-    const path_s = req.body.path;
-
-    var filename = path.join(appRoot, path_s);
-    var workbook = new Excel.Workbook();
-    var data = await workbook.xlsx.readFile(filename);
-
-    var arr = {};
-    let namesRoom = {
-        '1': 'Комната',
-        '2': 'Ванная',
-        '3': 'Туалет',
-        '4': 'Кухня',
-        '5': 'Коридор',
-        '6': 'Электрика',
-        '7': 'Лоджия/Балкон',
-        '8': 'Спец. монтаж'
-    }
-
-    var worksheet = workbook.getWorksheet(data.worksheets[0].name); 
-    worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
-        
-        // Наименование работы
-        try{
-            var job_j = row.values[1].richText[0].text;
-        } catch(e){
-            var job_j = row.values[1];
-        }
-        // Еденица измерения
-        try{
-            var unit_j = row.values[2].richText[0].text;
-        } catch(e){
-            var unit_j = row.values[2];
-        }
-        // Тип работ
-        try{
-            var type_j = row.values[3].richText[0].text;
-        } catch(e){
-            var type_j = row.values[3];
-        }
-        // Объект работ
-        try{
-            var obj_j = row.values[4].richText[0].text;
-        } catch(e){
-            var obj_j = row.values[4];
-        }
-        // Номера комнат
-        try{
-            var room_j = row.values[5].richText[0].text;
-        } catch(e){
-            var room_j = row.values[5];
-        }
-        // Цена
-        try{
-            var price = row.values[6].result;
-        } catch(e){
-            var price = row.values[6];
-        }
-
-        if (job_j && unit_j && type_j && obj_j && room_j && price && room_j != null) {
-            let arrRoom = String(room_j).replace(/ /g, '').split(',');
-            for (let i=0; i < arrRoom.length; i++) {
-                arr[arrRoom[i]][type_j][obj_j] = [];
-            }
-        }
-
-    });
-
-    await models.Architecture.remove();
-    models.Architecture.insertMany(arr)
-    .catch(err => {
-        res.json({ok: false, text: 'Ошибка записи'});
-    });
-
-    res.json({ok: true, text: "Данные загружены!", data: arr});
-})
+});
 router.post('/newpeople', async (req, res) => {
     const fio = req.body.fio;
     var numberFio = req.body.numberFio;

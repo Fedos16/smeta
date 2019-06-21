@@ -269,6 +269,10 @@ $(document).ready(function(){
                     }
                 }
 
+                $('.table_data tbody').html(`
+                    <tr><td colspan="6" class="appendNewRow">Новая запись</td></tr>
+                `);
+
                 let name = Object.keys(main);
                 for (let i=0; i < name.length; i++) {
                     let obj = Object.keys(main[name[i]]);
@@ -1171,18 +1175,24 @@ $(document).ready(function(){
     });
 
     $('#lenght_r, #width_r').on('keyup', (e) => {
-        var length = $('#lenght_r').val();
-        var width = $('#width_r').val();
+        try {
+            var length = eval($('#lenght_r').val().replace(',', '.').replace(/ /g, '').replace('=', '')) || 0;
+            var width = eval($('#width_r').val().replace(',', '.').replace(/ /g, '').replace('=', '')) || 0;
+            
 
-        if (length && width){
-            $('#perimeter').val((length*2+width*2).toFixed(2));
-            $('#floor_area').val((length*width).toFixed(2));
+            if (length && width){
+                
+                $('#perimeter').val((length*2+width*2).toFixed(2));
+                $('#floor_area').val((length*width).toFixed(2));
+            }
+        } catch(e) {
+            console.log(e);
         }
     });
     $('#height_r, #opening_r').on('keyup', (e) => {
         var per = $('#perimeter').val();
-        var height = $('#height_r').val();
-        var opening = $('#opening_r').val();
+        var height = eval($('#height_r').val().replace(',', '.').replace(/ /g, '').replace('=', '')) || 0;
+        var opening = eval($('#opening_r').val().replace(',', '.').replace(/ /g, '').replace('=', '')) || 0;
         if (per){
             $('#wall_area').val((per*height-opening).toFixed(2));
         }
@@ -1205,33 +1215,14 @@ $(document).ready(function(){
         }
     });
 
-    $(document).delegate(".type_jobs_col", "click", (e) => {
-
-        var parent =  $(e.target).parents();
-
-        $('.type_jobs_item ul').hide();
-        $('.type_jobs').show();
-
-        if (e.target.className == 'tj_text' || e.target.className == 'tj_icon') {
-            //$(e.target.parentElement).hide();
-
-            for (var i = 0; i < parent.length; i++){
-                if (parent[i].id != ""){
-                    $('#'+parent[i].id + ' ul').show(100);
-                    break;
-                }
-            }
-        } else if (e.target.className == 'type_jobs') {
-            //$(e.target).hide();
-
-            for (var i = 0; i < parent.length; i++){
-                if (parent[i].id != ""){
-                    $('#'+parent[i].id + ' ul').show(100);
-                    break;
-                }
-            }
-        }
-    })
+    $(document).delegate('.type_jobs_item', 'mouseenter', (e) => {
+        let elem = $(e.target).closest('.type_jobs_item')[0];
+        $($(elem).find('.category')[0]).show(100);
+    });
+    $(document).delegate('.type_jobs_item', 'mouseleave', (e) => {
+        let elem = $(e.target).closest('.type_jobs_item')[0];
+        $($(elem).find('.category')[0]).hide(100);
+    });
     $(document).delegate(".category li", "click", (e) => {
         $('.type_jobs_item ul').hide();
         $('.type_jobs').show();
@@ -1315,7 +1306,79 @@ $(document).ready(function(){
             `);
         }
 
-    })
+    });
+    $(document).delegate('.tj_text', 'click', (e) => {
+        let type = $(e.target).attr('title');
+        var room = $('#activeRoom p:eq(0)').text();
+        let roomInfo = JSON.parse(localStorage.getItem('ROOM_INFO'));
+
+        let smeta = JSON.parse(localStorage.getItem('SMETA'));
+
+        $('.table_data tbody').html('');
+
+        Object.keys(roomInfo[type]).map(obj => {
+            let data = roomInfo[type][obj];
+            $('.table_data tbody').append(`
+                <tr class="sub_title_row">
+                    <td colspan="7"><b>${obj}</b></td>
+                </tr>
+            `);
+            for (let x=0; x < data.length; x++) {
+                let col = 0;
+                let class_e = '';
+                let dspl = 'display: none;';
+                if (smeta) {
+                    if (room in smeta){
+                        if (type in smeta[room]){
+                            if (obj in smeta[room][type]) {
+                                var arr = smeta[room][type][obj];
+                                for (var z = 0; z < arr.length; z++){
+                                    if (arr[z]["Название"] == data[x].Name) {
+                                        class_e = ` class="active_tr"`;
+                                        dspl = '';
+                                        col = Number(arr[z]["Количество"]).toFixed(2);
+                                        if (data[x].UnitMe == 'шт') {
+                                            col = Number(arr[z]["Количество"]).toFixed(0);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (col == 0) {
+                    if (data[x].Formula == 'perimetr') {
+                        col = rooms[room].perimetr;
+                    } else if (data[x].Formula == 'floorArea') {
+                        col = rooms[room].floorArea;
+                    } else if (data[x].Formula == 'wallArea') {
+                        col = rooms[room].wallArea;
+                    } else if (data[x].Formula != 'unknown' && data[x].Formula != 'значение' && data[x].Formula != '') {
+                        col = data[x].Formula;
+                    }
+                    col = Number(col).toFixed(2);
+                    if (data[x].UnitMe == 'шт') {
+                        col = Number(col).toFixed(0);
+                    }
+                }
+                $('.table_data tbody').append(`
+                    <tr${class_e}>
+                        <td>${data[x].Name}</td>
+                        <td><img src="/images/pencil.png" alt="" style="${dspl}" class="edit_name_jb"></td>
+                        <td>${data[x].UnitMe}</td>
+                        <td>${col}</td>
+                        <td><img src="/images/pencil.png" alt="" style="${dspl}" class="edit_col_jb"></td>
+                        <td>${Number(data[x].Price).toFixed(2)}</td>
+                        <td>${(Number(data[x].Price) * col).toFixed(2)}</td>
+                    </tr>
+                `);
+            }
+        });
+
+        $('.body_r_content').show();
+
+    });
 
     $(document).delegate("#upload_file_node", "change", (e) => {
 
@@ -1341,38 +1404,6 @@ $(document).ready(function(){
                         alert('Данные успешно загружены');
                         console.log(data);
                         getItemsJobs();
-                    } else {
-                        alert(data.text);
-                    }
-                });
-            } else {
-                console.log(data);
-            }
-        });
-    });
-    $(document).delegate("#upload_file_arch", "change", (e) => {
-
-        var formData = new FormData();
-        formData.append('file', $('#upload_file_arch')[0].files[0]);
-
-        $.ajax({
-            type: 'POST',
-            url: '/api/savedata/saveexcel',
-            data: formData,
-            processData: false,
-            contentType: false
-        }).done(function(data){
-            if (data.ok){
-                $.ajax({
-                    type: 'POST',
-                    data: JSON.stringify({path: data.path}),
-                    contentType: 'application/json',
-                    url: '/api/savedata/ImportDataByExcelForArch',
-                }).done(function(data){
-                    if (data.ok){
-                        $('#upload_file_arch').val("");
-                        alert('Данные успешно загружены');
-                        getArchitecture();
                     } else {
                         alert(data.text);
                     }
@@ -1847,15 +1878,72 @@ $(document).ready(function(){
         }
     });
 
+    var RemoveJobsOfRooms = (array) => {
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(array),
+            contentType: 'application/json',
+            url: '/api/updatedata/RemoveJobsOfRooms'
+        }).done(async function(data){
+            if(data.ok){
+                console.log(data);
+            } else {
+                RequestError(data);
+            }
+        });
+    }
+    var AppendJobsInRooms = (array) => {
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(array),
+            contentType: 'application/json',
+            url: '/api/updatedata/AppendJobsInRooms'
+        }).done(async function(data){
+            if(data.ok){
+                console.log(data);
+            } else {
+                RequestError(data);
+            }
+        });
+    }
+
     $(document).delegate('.myCheckBox ul li', 'click', (e) => {
+        let activeSpan = $($(e.target).closest('ul')[0]).find('.activeSpan').length;
         let li = $(e.target).closest('li');
         let span = $(li).find('span');
         let clas = $(span).attr('class');
+        let tr = $(e.target).closest('tr')[0];
+
+        let data = {
+            job: tr.children[1].textContent,
+            type: tr.children[3].textContent,
+            object: tr.children[4].textContent,
+            room: $(li).find('p').text()
+        }
         if (clas) {
-            $(span).removeAttr('class');
+            if (activeSpan > 1) {
+                $(span).removeAttr('class');
+                RemoveJobsOfRooms(data);
+                activeSpan --;
+            } else {
+                alert('Нельзя удалить все комнаты');
+            }
         } else {
             $(span).addClass('activeSpan');
+            AppendJobsInRooms(data);
+            activeSpan ++;
         }
+        let spanText = '';
+        if (activeSpan == 1) {
+            spanText = `${activeSpan} комната`;
+        } else if (activeSpan > 1 && activeSpan < 5) {
+            spanText = `${activeSpan} комнаты`;
+        } else {
+            spanText = `${activeSpan} комнат`;
+        }
+
+        $($(tr.children[2]).find('u')[0]).text(`${spanText}`);
+
     });
 
     $(document).delegate('.body_content_row .table_data tbody tr', 'click', (e) => {
@@ -1875,7 +1963,7 @@ $(document).ready(function(){
     });
 
     $(document).delegate('.myCheckBox div p', 'click', () => {
-        $('.myCheckBox').attr('style', 'display: none');
+        $('.myCheckBox').hide();
     });
 
     $(document).delegate('#print_document', 'click', () => {
@@ -1884,6 +1972,24 @@ $(document).ready(function(){
     $(document).delegate('#homePage', 'click', () => {
         localStorage.clear();
         window.location.href = '/user/alldocuments';
+    });
+
+    $(document).delegate('.appendNewRow', 'click', (e) => {
+        
+        $($(e.target).closest('tr')[0]).after(`
+            <tr class="new-row">
+                <td>#</td>
+                <td>Наименование работ</td>
+                <td>Комната</td>
+                <td>Типы работ</td>
+                <td>Объект работ</td>
+                <td>=Формула</td>
+            </tr>
+            <tr class="new-row">
+                <td colspan="6" style="text-align: center;"><button>Отменить</button><button>Сохранить</button></td>
+            </tr>
+        `);
+        $($(e.target).closest('tr')[0]).remove();
     });
 
 });  

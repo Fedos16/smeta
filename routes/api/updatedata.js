@@ -84,5 +84,102 @@ router.post('/editRecordSmetaSettings', async (req, res) => {
         res.json({ok: false, text: 'Неизвестный запрос', err: 'ID кнопки не найден'});
     }
 });
+router.post('/RemoveJobsOfRooms', async (req, res) => {
+    const job = req.body.job;
+    const type = req.body.type;
+    const object = req.body.object;
+    const room = req.body.room;
+
+    let roomDB = await models.Architecture.findOne({NameRoom: room}, {Room: 1});
+    if (roomDB) {
+        let obj = roomDB.Room;
+        let jobs = obj[type][object];
+        let newJobs = [];
+        for (let i=0; i < jobs.length; i++) {
+            if (jobs[i].Name != job) {
+                newJobs.push(jobs[i]);
+            }
+        }
+        obj[type][object] = newJobs;
+        try {
+            await models.Architecture.findOneAndUpdate({NameRoom: room}, {Room: obj});
+            res.json({ok: true});
+        } catch(e) {
+            console.log(e);
+            res.json({ok: false, text: 'Сервер временно недоступен', err: e});
+        }
+    } else {
+        res.json({ok: false, text: 'Сообщите администратору, срочно!!!', err: 'Удаляемой комнаты не существует'});
+    }
+
+});
+router.post('/AppendJobsInRooms', async (req, res) => {
+    const job = req.body.job;
+    const type = req.body.type;
+    const object = req.body.object;
+    const room = req.body.room;
+
+    let roomDB = await models.Architecture.findOne({NameRoom: room}, {Room: 1});
+    if (roomDB) {
+        let jobDB = await models.JobItems.findOne({Name: job});
+        let obj = roomDB.Room;
+        if (type in obj) {
+            if (object in obj) {
+                obj[type][object].push({
+                    Name: job,
+                    UnitMe: jobDB.UnitMe,
+                    Price: jobDB.Price,
+                    Formula: jobDB.Formula
+                })
+            } else {
+                obj[type] = {object};
+                obj[type][object] = [{
+                    Name: job,
+                    UnitMe: jobDB.UnitMe,
+                    Price: jobDB.Price,
+                    Formula: jobDB.Formula
+                }];
+            }
+        } else {
+            obj = {type};
+            ovj[type] = {object};
+            obj[type][object] = [{
+                Name: job,
+                UnitMe: jobDB.UnitMe,
+                Price: jobDB.Price,
+                Formula: jobDB.Formula
+            }]
+        }
+        try {
+            await models.Architecture.findOneAndUpdate({NameRoom: room}, {Room: obj});
+            res.json({ok: true});
+        } catch(e) {
+            console.log(e);
+            res.json({ok: false, text: 'Сервер временно недоступен', err: e});
+        }
+    } else {
+        let jobDB = await models.JobItems.findOne({Name: job});
+        let obj = {type};
+        obj[type] = {object};
+        obj[type][object] = [{
+            Name: job,
+            UnitMe: jobDB.UnitMe,
+            Price: jobDB.Price,
+            Formula: jobDB.Formula
+        }];
+        try {
+            await models.Architecture.create({
+                Status: true,
+                NameRoom: room,
+                Room: obj
+            });
+            res.json({ok: true});
+        } catch(e) {
+            console.log(e);
+            res.json({ok: false, text: 'Сервер временно недоступен', err: e});
+        }
+    }
+
+});
 
 module.exports = router;

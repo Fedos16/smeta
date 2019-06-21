@@ -12,6 +12,9 @@ const schema = new Schema(
     UnitMe: {
         type: String
     },
+    Formula: {
+      type: String
+    },
     Status: {
       type: Boolean,
       default: true
