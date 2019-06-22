@@ -1202,7 +1202,19 @@ div.falseSymbol::after {
     background-color: #3d84e0;
     color: white;
 }
-
+.no {
+    border: 2px solid red;
+    margin-top: 15px;
+    background-color: transparent;
+    width: 200px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.no:hover {
+    background-color: red;
+    color: white;
+}
 
 @media print { /* Стиль для печати */
     body{

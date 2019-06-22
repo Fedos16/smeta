@@ -180,5 +180,19 @@ router.post('/AppendJobsInRooms', async (req, res) => {
     }
 
 });
+router.post('/CleadAllTable', async (req, res) => {
+    try {
+        await models.Architecture.remove();
+        await models.Documents.remove();
+        await models.JobItems.remove();
+        await models.ObjectJobs.remove();
+        await models.TypeJobs.remove();
+        await models.Rooms.remove();
+        res.json({ok: true});
+    } catch (e) {
+        console.log(e);
+        res.json({ok: false, text: 'Сервер временно недоступен', err: e});
+    }
+});
 
 module.exports = router;

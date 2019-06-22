@@ -452,6 +452,7 @@ $(document).ready(function(){
                             <input type="file" id="upload_file_node" id="file" name="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                             Загрузить файл
                         </label>
+                        <button id="clearDB" class="no">Очистить все</button>
                     </div>
                 </div>
             `);
@@ -1993,4 +1994,19 @@ $(document).ready(function(){
         $($(e.target).closest('tr')[0]).remove();
     });
 
+    $(document).delegate('#clearDB', 'click', (e) => {
+        $.ajax({
+            type: 'POST',
+            url: '/api/updatedata/CleadAllTable'
+        }).done(async function(data){
+            if(data.ok){
+                localStorage.clear();
+                getItemsJobs();
+                alert('Данные успешно очищены');
+                console.log(data);
+            } else {
+                RequestError(data);
+            }
+        });
+    });
 });  
