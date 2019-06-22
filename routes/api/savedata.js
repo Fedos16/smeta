@@ -61,7 +61,7 @@ router.post('/savedatafromexcel', async (req, res) => {
         '5': 'Коридор',
         '6': 'Электрика',
         '7': 'Лоджия/балкон',
-        '8': 'Спец. монтаж'
+        '8': 'Спецмонтаж'
     }
 
     let arrItemJob = [];
