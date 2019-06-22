@@ -113,6 +113,7 @@ router.post('/RemoveJobsOfRooms', async (req, res) => {
     }
 
 });
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
 router.post('/AppendJobsInRooms', async (req, res) => {
     const job = req.body.job;
     const type = req.body.type;
@@ -132,7 +133,6 @@ router.post('/AppendJobsInRooms', async (req, res) => {
                     Formula: jobDB.Formula
                 })
             } else {
-                obj[type] = {object};
                 obj[type][object] = [{
                     Name: job,
                     UnitMe: jobDB.UnitMe,
@@ -141,8 +141,7 @@ router.post('/AppendJobsInRooms', async (req, res) => {
                 }];
             }
         } else {
-            obj = {type};
-            ovj[type] = {object};
+            obj[type] = {};
             obj[type][object] = [{
                 Name: job,
                 UnitMe: jobDB.UnitMe,
@@ -159,8 +158,8 @@ router.post('/AppendJobsInRooms', async (req, res) => {
         }
     } else {
         let jobDB = await models.JobItems.findOne({Name: job});
-        let obj = {type};
-        obj[type] = {object};
+        let obj = {};
+        obj[type] = {};
         obj[type][object] = [{
             Name: job,
             UnitMe: jobDB.UnitMe,

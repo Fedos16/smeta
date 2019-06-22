@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 const router = express.Router();
 const path = require('path');
@@ -37,12 +38,14 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 // SAVE EXCEL
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
 router.post('/saveexcel', upload.single("file"), async (req, res) => {
 
     var filename = path.join(__dirname, req.file.path)
     res.json({ok: true, path: req.file.path});
 
 });
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
 router.post('/savedatafromexcel', async (req, res) => {
     const path_s = req.body.path;
 
@@ -122,16 +125,11 @@ router.post('/savedatafromexcel', async (req, res) => {
         try {
             var arrRoom_j = row.values[5].richText[0].text;
         } catch(e) {
+            // eslint-disable-next-line no-redeclare
             var arrRoom_j = row.values[5];
         }
 
         if (job_j != null && unit_j != null && price != null && price != "цена" && arrRoom_j != null) {
-            arrItemJob.push({
-                Name: job_j,
-                Price: price,
-                UnitMe: unit_j,
-                Status: true
-            });
             objTypeJobs[type_j] = true;
             objObjectJobs[obj_j] = true;
 
